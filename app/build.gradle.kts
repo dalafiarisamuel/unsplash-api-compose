@@ -34,7 +34,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            buildConfigField("String", "API_KEY", "\"qN6vQfuJGvqWOCsv8rOcWoM4Fo_DHMt_mPNaAcH4N7o\"")
+
         }
 
         getByName("debug") {
@@ -43,7 +43,6 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            buildConfigField("String", "API_KEY", "\"qN6vQfuJGvqWOCsv8rOcWoM4Fo_DHMt_mPNaAcH4N7o\"")
         }
     }
 
