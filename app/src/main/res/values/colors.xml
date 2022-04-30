@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">@color/colorActivityWhiteBackground</color>
+    <color name="colorPrimaryDark">@color/colorGrayDivider</color>
+    <color name="colorAccent">#212121</color>
+    <color name="colorActivityWhiteBackground">@android:color/white</color>
+    <color name="matt_black">#212121</color>
+    <color name="colorDisabledGray">#F5F5FD</color>
+    <color name="colorGrayDivider">#D4D8EB</color>
+    <color name="cardBackground">@android:color/white</color>
+</resources>
