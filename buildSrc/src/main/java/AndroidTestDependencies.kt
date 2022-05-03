@@ -13,6 +13,12 @@ object AndroidTestDependencies {
         "androidx.test.espresso:espresso-contrib:${Versions.espressoContrib}"
     private const val okHttpMockServer =
         "com.squareup.okhttp3:mockwebserver:${Versions.okHttpMockServer}"
+    private const val jUnit = "androidx.test.ext:junit:1.1.3"
+
+    object Compose {
+
+        const val composeJunitTest = "androidx.compose.ui:ui-test-junit4:1.1.0"
+    }
 
     val androidTestImplementation =
         listOf(
@@ -25,6 +31,8 @@ object AndroidTestDependencies {
             androidXcore,
             hiltTesting,
             espressoContrib,
-            okHttpMockServer
+            okHttpMockServer,
+            jUnit,
+            Compose.composeJunitTest
         )
 }

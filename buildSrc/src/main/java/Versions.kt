@@ -15,9 +15,12 @@ object Versions {
     const val moshiKotlinCodegen = moshiKotlin
     const val ioCard = "5.5.1"
     const val lifecycleComponent = "2.3.0"
+    const val androidLifecycle= "2.4.1"
+    const val lifecycleExtension= "2.2.0"
+    const val androidxPagingRuntime = "3.1.1"
     const val androidxAnnotation = "1.2.0"
     const val junit4Version = "4.13"
-    const val espressoCore = "3.3.0"
+    const val espressoCore = "3.4.0"
     const val espressoContrib = "3.3.0"
     const val androidxTestExt = "1.1.2"
     const val navigationSafeArgs = "2.3.3"
@@ -37,4 +40,5 @@ object Versions {
     const val okHttpMockServer = "4.7.2"
     const val okHttp = "4.2.2"
     const val retroMock = "1.1.0"
+    const val composeVersion = "1.1.0"
 }

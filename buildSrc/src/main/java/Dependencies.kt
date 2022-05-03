@@ -26,6 +26,45 @@ object Dependencies {
         "com.squareup.okhttp3:logging-interceptor:${Versions.loggingInterceptor}"
     private const val okHttp = "com.squareup.okhttp3:okhttp:${Versions.okHttp}"
     private const val retroMock = "co.infinum:retromock:${Versions.retroMock}"
+    private const val androidLifecycleRuntime =
+        "androidx.lifecycle:lifecycle-runtime-ktx:${Versions.androidLifecycle}"
+    private const val lifecycleViewModel =
+        "androidx.lifecycle:lifecycle-viewmodel-ktx:${Versions.androidLifecycle}"
+    private const val lifecycleExtension =
+        "androidx.lifecycle:lifecycle-extensions:${Versions.lifecycleExtension}"
+    private const val androidxPagingRuntime =
+        "androidx.paging:paging-runtime:${Versions.androidxPagingRuntime}"
+
+
+    object ComposeDependencies {
+
+        private const val composeUi = "androidx.compose.ui:ui:${Versions.composeVersion}"
+        private const val composeMaterial =
+            "androidx.compose.material:material:${Versions.composeVersion}"
+        private const val composeRuntimeLiveData =
+            "androidx.compose.runtime:runtime-livedata:${Versions.composeVersion}"
+        private const val composeUiToolingPreview =
+            "androidx.compose.ui:ui-tooling-preview:${Versions.composeVersion}"
+        private const val composePaging = "androidx.paging:paging-compose:1.0.0-alpha14"
+        private const val composeActivity = "androidx.activity:activity-compose:1.4.0"
+        private const val composeViewModel = "androidx.lifecycle:lifecycle-viewmodel-compose:2.4.1"
+        private const val coilCompose = "io.coil-kt:coil-compose:1.4.0"
+        private const val composeNavigation = "androidx.navigation:navigation-compose:2.4.0"
+
+        val implementations = listOf(
+            composeUi,
+            composeMaterial,
+            composeRuntimeLiveData,
+            composeUiToolingPreview,
+            composePaging,
+            composeActivity,
+            composeViewModel,
+            coilCompose,
+            composeNavigation
+        )
+
+
+    }
 
     val implementations = listOf(
         kotlinStandardLibrary,
@@ -47,6 +86,10 @@ object Dependencies {
         workManagerSupport,
         loggingInterceptor,
         okHttp,
-        retroMock
-    )
+        retroMock,
+        androidLifecycleRuntime,
+        lifecycleViewModel,
+        lifecycleExtension,
+        androidxPagingRuntime
+    ) + ComposeDependencies.implementations
 }

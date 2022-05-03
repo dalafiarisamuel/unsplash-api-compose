@@ -1,10 +1,21 @@
-object Plugins {
+import org.gradle.kotlin.dsl.kotlin
+import org.gradle.plugin.use.PluginDependenciesSpec
+import org.gradle.plugin.use.PluginDependencySpec
 
-    const val androidApplication = "com.android.application"
-    const val android = "android"
-    const val kotlinParcelize = "kotlin-parcelize"
-    const val kapt = "kapt"
-    const val androidxNavigationsafeArgsKotlin = "androidx.navigation.safeargs.kotlin"
-    const val daggerHilt = "dagger.hilt.android.plugin"
+val PluginDependenciesSpec.androidApplication: PluginDependencySpec
+    get() = id("com.android.application")
 
-}
+val PluginDependenciesSpec.androidLibrary: PluginDependencySpec
+    get() = kotlin("android")
+
+val PluginDependenciesSpec.kaptPlugin: PluginDependencySpec
+    get() = kotlin("kapt")
+
+val PluginDependenciesSpec.kotlinParcelize: PluginDependencySpec
+    get() = id("kotlin-parcelize")
+
+val PluginDependenciesSpec.navigationSafeArgsKotlin: PluginDependencySpec
+    get() = id("androidx.navigation.safeargs.kotlin")
+
+val PluginDependenciesSpec.daggerHilt: PluginDependencySpec
+    get() = id("dagger.hilt.android.plugin")
