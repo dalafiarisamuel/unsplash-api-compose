@@ -5,7 +5,10 @@ import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.*
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
 import androidx.compose.foundation.shape.CircleShape
@@ -20,6 +23,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -48,6 +53,7 @@ import ng.devtamuno.unsplash.compose.ui.theme.complementary
 fun UnsplashImageList(
     flowData: Flow<PagingData<Photo>>,
     lazyListState: LazyListState,
+    nestedScrollConnection: NestedScrollConnection,
     isDataReturnedEmpty: ((Boolean) -> Unit)? = null,
     onItemClicked: (Photo?) -> Unit,
     onItemLongClicked: (Photo?) -> Unit
@@ -61,7 +67,8 @@ fun UnsplashImageList(
         verticalArrangement = Arrangement.spacedBy(8.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         modifier = Modifier
-            .padding(top = 15.dp),
+            .padding(top = 15.dp)
+            .nestedScroll(nestedScrollConnection),
         cells = GridCells.Fixed(2),
         content = {
             items(lazyData) { unsplashImage ->
@@ -142,6 +149,23 @@ private fun UnsplashImage(
     val imageColorParsed = (data?.color?.color ?: Color(0xFF212121))
     val imageColorParseComplementary = imageColorParsed.complementary()
     val isShowProgress by remember { mutableStateOf(MutableTransitionState(true)) }
+    val imageRequestListener = remember {
+        object : ImageRequest.Listener {
+            override fun onSuccess(
+                request: ImageRequest,
+                metadata: ImageResult.Metadata
+            ) {
+                super.onSuccess(request, metadata)
+                isShowProgress.targetState = false
+            }
+
+            override fun onStart(request: ImageRequest) {
+                super.onStart(request)
+                isShowProgress.targetState = true
+
+            }
+        }
+    }
 
     Box(
         modifier = Modifier.fillMaxWidth()
@@ -161,21 +185,7 @@ private fun UnsplashImage(
             Image(
                 painter = rememberImagePainter(data?.urls?.small) {
                     transformations(RoundedCornersTransformation(10f))
-                    listener(object : ImageRequest.Listener {
-                        override fun onSuccess(
-                            request: ImageRequest,
-                            metadata: ImageResult.Metadata
-                        ) {
-                            super.onSuccess(request, metadata)
-                            isShowProgress.targetState = false
-                        }
-
-                        override fun onStart(request: ImageRequest) {
-                            super.onStart(request)
-                            isShowProgress.targetState = true
-
-                        }
-                    })
+                    listener(imageRequestListener)
                 },
                 contentDescription = null,
                 modifier = Modifier
