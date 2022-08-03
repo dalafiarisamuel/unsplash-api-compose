@@ -26,7 +26,7 @@ A project to display images from https://unsplash.com API using Jetpack Compose
 <br>
 
 ## Prerequisite
-* To successfully make API calls to Unsplash Endpoint, use a valida API Token from Unsplash.
+* To successfully make API calls to Unsplash Endpoint, use a valid API Token from Unsplash.
 * Enter your valid API token [here](./app/src/main/java/ng/devtamuno/unsplash/compose/env/Env.kt)
 
 
