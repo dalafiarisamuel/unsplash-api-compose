@@ -6,7 +6,6 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -31,11 +30,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import ng.devtamuno.unsplash.compose.R
 import ng.devtamuno.unsplash.compose.data.model.ui.Photo
-import ng.devtamuno.unsplash.compose.ui.components.ChipComponent
-import ng.devtamuno.unsplash.compose.ui.components.CollapsibleSearchBar
-import ng.devtamuno.unsplash.compose.ui.components.EmptyListStateComponent
-import ng.devtamuno.unsplash.compose.ui.components.UnsplashImageList
-import ng.devtamuno.unsplash.compose.ui.theme.appDark
+import ng.devtamuno.unsplash.compose.ui.components.*
 import ng.devtamuno.unsplash.compose.ui.theme.appWhite
 import ng.devtamuno.unsplash.compose.ui.viewmodel.ImageListViewModel
 
@@ -49,13 +44,13 @@ fun UnsplashHomeScreen() {
     val listScrollState = rememberLazyListState()
     val coroutine = rememberCoroutineScope()
 
-    val selectedImage = remember { mutableStateOf<Photo?>(null) }
+    var selectedImage by remember { mutableStateOf<Photo?>(null) }
     var isDialogVisible by remember { mutableStateOf(false) }
     val isListEmpty = remember { MutableTransitionState(false) }
 
     val toolbarHeight = 105.dp
     val toolbarHeightPx = with(LocalDensity.current) { toolbarHeight.roundToPx().toFloat() }
-    val toolbarOffsetHeightPx = remember { mutableStateOf(0f) }
+    var toolbarOffsetHeightPx by remember { mutableStateOf(0f) }
     val nestedScrollConnection = remember {
         object : NestedScrollConnection {
             override fun onPreScroll(
@@ -63,8 +58,8 @@ fun UnsplashHomeScreen() {
                 source: NestedScrollSource,
             ): Offset {
                 val delta = available.y
-                val newOffset = toolbarOffsetHeightPx.value + delta
-                toolbarOffsetHeightPx.value = newOffset.coerceIn(-toolbarHeightPx, 0f)
+                val newOffset = toolbarOffsetHeightPx + delta
+                toolbarOffsetHeightPx = newOffset.coerceIn(-toolbarHeightPx, 0f)
                 // Returning Zero so we just observe the scroll but don't execute it
                 return Offset.Zero
             }
@@ -75,7 +70,6 @@ fun UnsplashHomeScreen() {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(color = appDark)
             .padding(start = 21.dp, end = 21.dp)
     ) {
 
@@ -90,7 +84,7 @@ fun UnsplashHomeScreen() {
         )
 
         CollapsibleSearchBar(
-            toolbarOffset = toolbarOffsetHeightPx.value,
+            toolbarOffset = toolbarOffsetHeightPx,
             toolbarHeight = toolbarHeight,
             keyboardAction = {
                 coroutine.launch(Dispatchers.Main) {
@@ -98,23 +92,21 @@ fun UnsplashHomeScreen() {
                 }
                 viewModel.searchCurrentQuery()
             },
-            textValue = viewModel.textFieldState.value,
+            textValue = viewModel.textFieldState,
             textValueChange = {
-                viewModel.textFieldState.value = it
+                viewModel.textFieldState = it
             },
         )
 
         ChipComponent(
-            modifier = Modifier
-                .padding(top = 20.dp),
-            selectedText = viewModel.selectedChipState.value,
+            modifier = Modifier.padding(top = 20.dp),
+            selectedText = viewModel.selectedChipState,
         ) {
             coroutine.launch(Dispatchers.Main) {
                 listScrollState.scrollToItem(0)
             }
             viewModel.updateSelectedChipState(it)
         }
-
 
         UnsplashImageList(
             flowData = viewModel.photos,
@@ -124,7 +116,7 @@ fun UnsplashHomeScreen() {
                 isListEmpty.targetState = it
             },
             onItemClicked = {
-                selectedImage.value = it
+                selectedImage = it
                 isDialogVisible = true
             },
             onItemLongClicked = {
@@ -145,9 +137,7 @@ fun UnsplashHomeScreen() {
         }
 
         if (isDialogVisible) {
-            ImagePreviewDialog(
-                selectedImage.value
-            ) {
+            ImagePreviewDialog(photo = selectedImage) {
                 isDialogVisible = false
             }
         }

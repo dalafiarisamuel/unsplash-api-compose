@@ -1,6 +1,8 @@
 package ng.devtamuno.unsplash.compose.ui.viewmodel
 
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.*
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
@@ -19,8 +21,8 @@ class ImageListViewModel @Inject constructor(
     state: SavedStateHandle
 ) : ViewModel() {
 
-    var selectedChipState = mutableStateOf("")
-    var textFieldState = mutableStateOf("")
+    var selectedChipState by mutableStateOf("")
+    var textFieldState by mutableStateOf("")
 
     private val currentQuery = state.getLiveData(CURRENT_QUERY, DEFAULT_QUERY)
 
@@ -29,12 +31,12 @@ class ImageListViewModel @Inject constructor(
     }
 
     fun searchCurrentQuery() {
-        setSearchTerm(textFieldState.value)
+        setSearchTerm(textFieldState)
     }
 
     fun updateSelectedChipState(term: String) {
-        selectedChipState.value = term
-        textFieldState.value = term
+        selectedChipState = term
+        textFieldState = term
         setSearchTerm(term)
     }
 

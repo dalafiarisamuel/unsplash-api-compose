@@ -59,8 +59,7 @@ fun UnsplashImageList(
     onItemLongClicked: (Photo?) -> Unit
 ) {
 
-    val lazyData: LazyPagingItems<Photo> =
-        flowData.collectAsLazyPagingItems()
+    val lazyData: LazyPagingItems<Photo> = flowData.collectAsLazyPagingItems()
 
     LazyVerticalGrid(
         state = lazyListState,
@@ -80,11 +79,8 @@ fun UnsplashImageList(
             }
 
             lazyData.apply {
-
                 isDataReturnedEmpty?.invoke(lazyData.itemCount <= 0)
-
                 when {
-
                     loadState.refresh is LoadState.Loading -> {
                         item {
                             LoadingView(
@@ -106,9 +102,7 @@ fun UnsplashImageList(
 @Composable
 fun EmptyListStateComponent(
     modifier: Modifier = Modifier,
-    term: String = stringResource(
-        id = R.string.searched_term_not_found
-    )
+    term: String = stringResource(id = R.string.searched_term_not_found)
 ) {
 
     Column(
@@ -187,13 +181,11 @@ private fun UnsplashImage(
                     transformations(RoundedCornersTransformation(10f))
                     listener(imageRequestListener)
                 },
-                contentDescription = null,
+                contentDescription = data?.description,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(200.dp)
-
             )
-
         }
 
         AnimatedVisibility(
@@ -202,14 +194,9 @@ private fun UnsplashImage(
             enter = fadeIn(initialAlpha = 0.4f),
             exit = fadeOut(tween(durationMillis = 250))
 
-        ) {
-            CircularProgressIndicator(
-                color = imageColorParseComplementary
-            )
-        }
+        ) { CircularProgressIndicator(color = imageColorParseComplementary) }
 
     }
-
 
 }
 
