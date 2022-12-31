@@ -26,6 +26,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.paging.compose.collectAsLazyPagingItems
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import ng.devtamuno.unsplash.compose.R
@@ -109,7 +110,8 @@ fun UnsplashHomeScreen() {
         }
 
         UnsplashImageList(
-            flowData = viewModel.photos,
+            modifier = Modifier.fillMaxSize(),
+            imageList = viewModel.photos.collectAsLazyPagingItems(),
             lazyListState = listScrollState,
             nestedScrollConnection = nestedScrollConnection,
             isDataReturnedEmpty = {

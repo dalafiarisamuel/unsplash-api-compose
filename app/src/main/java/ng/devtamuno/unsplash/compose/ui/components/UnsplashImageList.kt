@@ -51,7 +51,8 @@ import ng.devtamuno.unsplash.compose.ui.theme.complementary
 @ExperimentalFoundationApi
 @Composable
 fun UnsplashImageList(
-    flowData: Flow<PagingData<Photo>>,
+    modifier: Modifier,
+    imageList: LazyPagingItems<Photo>,
     lazyListState: LazyListState,
     nestedScrollConnection: NestedScrollConnection,
     isDataReturnedEmpty: ((Boolean) -> Unit)? = null,
@@ -59,18 +60,17 @@ fun UnsplashImageList(
     onItemLongClicked: (Photo?) -> Unit
 ) {
 
-    val lazyData: LazyPagingItems<Photo> = flowData.collectAsLazyPagingItems()
-
     LazyVerticalGrid(
         state = lazyListState,
         verticalArrangement = Arrangement.spacedBy(8.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         modifier = Modifier
             .padding(top = 15.dp)
-            .nestedScroll(nestedScrollConnection),
+            .nestedScroll(nestedScrollConnection)
+            .then(modifier),
         cells = GridCells.Fixed(2),
         content = {
-            items(lazyData) { unsplashImage ->
+            items(imageList) { unsplashImage ->
                 UnsplashImage(
                     unsplashImage,
                     onImageClicked = onItemClicked,
@@ -78,8 +78,8 @@ fun UnsplashImageList(
                 )
             }
 
-            lazyData.apply {
-                isDataReturnedEmpty?.invoke(lazyData.itemCount <= 0)
+            imageList.apply {
+                isDataReturnedEmpty?.invoke(imageList.itemCount <= 0)
                 when {
                     loadState.refresh is LoadState.Loading -> {
                         item {
@@ -106,7 +106,7 @@ fun EmptyListStateComponent(
 ) {
 
     Column(
-        modifier = modifier,
+        modifier = Modifier.then(modifier),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
