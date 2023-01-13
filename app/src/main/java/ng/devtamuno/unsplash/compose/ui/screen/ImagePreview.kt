@@ -102,8 +102,9 @@ private fun DialogContent(
                     listener(imageRequestListener)
                 },
                 contentScale = ContentScale.Crop,
-                contentDescription = null,
+                contentDescription = authorOrDescriptionText,
                 modifier = Modifier.fillMaxSize()
+                /*.aspectRatio(4 / 3f)*/
             )
 
         }
@@ -135,7 +136,7 @@ private fun DialogContent(
             )
 
             Text(
-                text = authorOrDescriptionText ?: "",
+                text = authorOrDescriptionText.orEmpty(),
                 color = imageColorParseComplementary,
                 fontSize = 14.sp,
                 maxLines = 1,

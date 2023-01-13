@@ -48,6 +48,7 @@
     <string name="current_events">Current Events</string>
     <string name="experimental">Experimental</string>
     <string name="textures_and_patterns">Textures &amp; Patterns</string>
+    <string name="nigeria">Nigeria</string>
     <string name="loading">Loading…</string>
     <string name="nature_emoji">🌅</string>
     <string name="fashion_emoji">🥻</string>
@@ -66,4 +67,5 @@
     <string name="current_events_emoji">📈</string>
     <string name="experimental_emoji">🧪</string>
     <string name="textures_and_patterns_emoji">🌅</string>
+    <string name="nigeria_emoji">🇳🇬</string>
 </resources>

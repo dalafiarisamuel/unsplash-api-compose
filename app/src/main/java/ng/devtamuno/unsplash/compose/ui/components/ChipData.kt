@@ -114,6 +114,10 @@ fun ChipComponent(
                 stringResource(id = R.string.current_events)
             ),
             ChipData(
+                stringResource(id = R.string.nigeria_emoji),
+                stringResource(id = R.string.nigeria)
+            ),
+            ChipData(
                 stringResource(id = R.string.nature_emoji),
                 stringResource(id = R.string.nature)
             ),
