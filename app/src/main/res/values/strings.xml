@@ -68,4 +68,9 @@
     <string name="experimental_emoji">🧪</string>
     <string name="textures_and_patterns_emoji">🌅</string>
     <string name="nigeria_emoji">🇳🇬</string>
+    <string name="download_has_started">Download has started</string>
+    <string name="download">Download</string>
+    <string name="dismiss">Dismiss</string>
+    <string name="download_image">Download Image</string>
+    <string name="are_you_sure_you_want_to_download_this_image">Are you sure you want to download this image?</string>
 </resources>

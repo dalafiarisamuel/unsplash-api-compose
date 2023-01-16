@@ -1,5 +1,6 @@
 package ng.devtamuno.unsplash.compose.ui.viewmodel
 
+
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -10,14 +11,17 @@ import androidx.paging.cachedIn
 import androidx.paging.liveData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import ng.devtamuno.unsplash.compose.data.mapper.PhotoMapper
+import ng.devtamuno.unsplash.compose.data.model.ui.Photo
 import ng.devtamuno.unsplash.compose.data.repository.ImageRepository
 import ng.devtamuno.unsplash.compose.data.source.ImagePagingSource
+import ng.devtamuno.unsplash.compose.file.FileDownloader
 import javax.inject.Inject
 
 @HiltViewModel
 class ImageListViewModel @Inject constructor(
     private val repository: ImageRepository,
     private val photoMapper: PhotoMapper,
+    private val fileDownloader: FileDownloader,
     state: SavedStateHandle
 ) : ViewModel() {
 
@@ -58,6 +62,12 @@ class ImageListViewModel @Inject constructor(
             )
         }
     ).liveData
+
+    fun downloadFile(photo: Photo?) {
+        if (photo != null) {
+            fileDownloader.downloadImageFileToDownloadFolder(photo.urls.full)
+        }
+    }
 
     companion object {
         private const val CURRENT_QUERY = "current_query"

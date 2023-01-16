@@ -14,7 +14,6 @@ object Versions {
     const val moshiKotlin = "1.12.0"
     const val moshiKotlinCodegen = moshiKotlin
     const val ioCard = "5.5.1"
-    const val lifecycleComponent = "2.3.0"
     const val androidLifecycle= "2.4.1"
     const val lifecycleExtension= "2.2.0"
     const val androidxPagingRuntime = "3.1.1"

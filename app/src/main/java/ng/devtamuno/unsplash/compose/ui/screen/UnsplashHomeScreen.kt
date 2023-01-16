@@ -1,5 +1,10 @@
 package ng.devtamuno.unsplash.compose.ui.screen
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.core.tween
@@ -19,12 +24,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.paging.compose.collectAsLazyPagingItems
 import kotlinx.coroutines.Dispatchers
@@ -44,9 +51,11 @@ fun UnsplashHomeScreen() {
 
     val listScrollState = rememberLazyListState()
     val coroutine = rememberCoroutineScope()
+    val context = LocalContext.current
 
     var selectedImage by remember { mutableStateOf<Photo?>(null) }
     var isDialogVisible by remember { mutableStateOf(false) }
+    var isDownloadImageDialogVisible by remember { mutableStateOf(false) }
     val isListEmpty = remember { MutableTransitionState(false) }
 
     val toolbarHeight = 105.dp
@@ -66,7 +75,13 @@ fun UnsplashHomeScreen() {
             }
         }
     }
-
+    val launcher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted: Boolean ->
+        if (isGranted) {
+            isDownloadImageDialogVisible = true
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -109,8 +124,7 @@ fun UnsplashHomeScreen() {
             viewModel.updateSelectedChipState(it)
         }
 
-        UnsplashImageList(
-            modifier = Modifier.fillMaxSize(),
+        UnsplashImageList(modifier = Modifier.fillMaxSize(),
             imageList = viewModel.photos.collectAsLazyPagingItems(),
             lazyListState = listScrollState,
             nestedScrollConnection = nestedScrollConnection,
@@ -122,9 +136,18 @@ fun UnsplashHomeScreen() {
                 isDialogVisible = true
             },
             onItemLongClicked = {
-
-            }
-        )
+                selectedImage = it
+                when (PackageManager.PERMISSION_GRANTED) {
+                    ContextCompat.checkSelfPermission(
+                        context, Manifest.permission.WRITE_EXTERNAL_STORAGE
+                    ) -> {
+                        isDownloadImageDialogVisible = true
+                    }
+                    else -> {
+                        launcher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    }
+                }
+            })
 
         AnimatedVisibility(
             visibleState = isListEmpty,
@@ -144,6 +167,19 @@ fun UnsplashHomeScreen() {
             }
         }
 
+        if (isDownloadImageDialogVisible) {
+            val message = stringResource(R.string.download_has_started)
+            DownloadImageAlertDialog(
+                onDismissClicked = {
+                    isDownloadImageDialogVisible = false
+                },
+                onConfirmedClicked = {
+                    isDownloadImageDialogVisible = false
+                    viewModel.downloadFile(selectedImage)
+                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                }
+            )
+        }
     }
 
 }
