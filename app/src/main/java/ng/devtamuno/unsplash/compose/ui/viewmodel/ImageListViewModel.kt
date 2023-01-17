@@ -8,8 +8,10 @@ import androidx.lifecycle.*
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
-import androidx.paging.liveData
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.flatMapLatest
 import ng.devtamuno.unsplash.compose.data.mapper.PhotoMapper
 import ng.devtamuno.unsplash.compose.data.model.ui.Photo
 import ng.devtamuno.unsplash.compose.data.repository.ImageRepository
@@ -17,6 +19,7 @@ import ng.devtamuno.unsplash.compose.data.source.ImagePagingSource
 import ng.devtamuno.unsplash.compose.file.FileDownloader
 import javax.inject.Inject
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class ImageListViewModel @Inject constructor(
     private val repository: ImageRepository,
@@ -28,7 +31,11 @@ class ImageListViewModel @Inject constructor(
     var selectedChipState by mutableStateOf("")
     var textFieldState by mutableStateOf("")
 
-    private val currentQuery = state.getLiveData(CURRENT_QUERY, DEFAULT_QUERY)
+    private var currentQuery: MutableStateFlow<String>
+
+    init {
+        currentQuery = MutableStateFlow(state[CURRENT_QUERY] ?: DEFAULT_QUERY)
+    }
 
     private fun setSearchTerm(query: String) {
         currentQuery.value = query.ifEmpty { DEFAULT_QUERY }
@@ -44,9 +51,10 @@ class ImageListViewModel @Inject constructor(
         setSearchTerm(term)
     }
 
-    val photos = currentQuery.switchMap { queryString ->
+
+    val photos = currentQuery.flatMapLatest { queryString ->
         getImageSearchResult(queryString).cachedIn(viewModelScope)
-    }.asFlow()
+    }
 
     private fun getImageSearchResult(query: String) = Pager(
         config = PagingConfig(
@@ -61,7 +69,7 @@ class ImageListViewModel @Inject constructor(
                 query = query
             )
         }
-    ).liveData
+    ).flow
 
     fun downloadFile(photo: Photo?) {
         if (photo != null) {

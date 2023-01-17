@@ -40,4 +40,5 @@ object Versions {
     const val okHttp = "4.2.2"
     const val retroMock = "1.1.0"
     const val composeVersion = "1.1.0"
+    const val savedState = "2.5.0"
 }

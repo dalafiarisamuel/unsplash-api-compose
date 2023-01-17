@@ -34,6 +34,8 @@ object Dependencies {
         "androidx.lifecycle:lifecycle-extensions:${Versions.lifecycleExtension}"
     private const val androidxPagingRuntime =
         "androidx.paging:paging-runtime:${Versions.androidxPagingRuntime}"
+    private const val savedState =
+        "androidx.lifecycle:lifecycle-viewmodel-savedstate:${Versions.savedState}"
 
 
     object ComposeDependencies {
@@ -54,7 +56,6 @@ object Dependencies {
         val implementations = listOf(
             composeUi,
             composeMaterial,
-            composeRuntimeLiveData,
             composeUiToolingPreview,
             composePaging,
             composeActivity,
@@ -62,7 +63,6 @@ object Dependencies {
             coilCompose,
             composeNavigation
         )
-
 
     }
 
@@ -90,6 +90,7 @@ object Dependencies {
         androidLifecycleRuntime,
         lifecycleViewModel,
         lifecycleExtension,
-        androidxPagingRuntime
+        androidxPagingRuntime,
+        savedState,
     ) + ComposeDependencies.implementations
 }
