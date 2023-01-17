@@ -29,7 +29,6 @@ object ApplicationModule {
         val okHttpBuilder = OkHttpClient.Builder()
             .followRedirects(true)
             .followSslRedirects(true)
-            .retryOnConnectionFailure(true)
             .cache(null)
             .connectTimeout(120, TimeUnit.SECONDS)
             .readTimeout(120, TimeUnit.SECONDS)

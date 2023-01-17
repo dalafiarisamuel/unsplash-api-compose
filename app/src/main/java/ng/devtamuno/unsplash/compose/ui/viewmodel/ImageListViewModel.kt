@@ -50,7 +50,7 @@ class ImageListViewModel @Inject constructor(
 
     private fun getImageSearchResult(query: String) = Pager(
         config = PagingConfig(
-            pageSize = 20,
+            pageSize = 25,
             maxSize = 200,
             enablePlaceholders = false
         ),
