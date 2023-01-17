@@ -124,7 +124,8 @@ fun UnsplashHomeScreen() {
             viewModel.updateSelectedChipState(it)
         }
 
-        UnsplashImageList(modifier = Modifier.fillMaxSize(),
+        UnsplashImageList(
+            modifier = Modifier.fillMaxSize(),
             imageList = viewModel.photos.collectAsLazyPagingItems(),
             lazyListState = listScrollState,
             nestedScrollConnection = nestedScrollConnection,
