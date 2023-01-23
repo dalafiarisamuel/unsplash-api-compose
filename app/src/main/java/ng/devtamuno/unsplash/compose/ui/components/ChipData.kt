@@ -1,5 +1,6 @@
 package ng.devtamuno.unsplash.compose.ui.components
 
+import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -22,7 +23,8 @@ import ng.devtamuno.unsplash.compose.ui.theme.appDark
 import ng.devtamuno.unsplash.compose.ui.theme.appWhite
 
 
-@Preview
+@Preview(name = "Chip Light", uiMode = Configuration.UI_MODE_NIGHT_NO)
+@Preview(name = "Chip Dark", uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun Chip(
     chip: ChipData = ChipData(

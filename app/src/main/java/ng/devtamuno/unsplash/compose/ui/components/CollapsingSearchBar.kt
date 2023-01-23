@@ -1,5 +1,6 @@
 package ng.devtamuno.unsplash.compose.ui.components
 
+import android.content.res.Configuration
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
@@ -9,10 +10,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ng.devtamuno.unsplash.compose.R
+import ng.devtamuno.unsplash.compose.ui.theme.UnsplashAPIComposeTheme
 import ng.devtamuno.unsplash.compose.ui.theme.appWhite
 
 
@@ -80,5 +83,16 @@ fun CollapsibleSearchBar(
             }
         }
 
+    }
+}
+
+@Preview(name = "Dark", uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Preview(name = "Light", uiMode = Configuration.UI_MODE_NIGHT_NO)
+@ExperimentalFoundationApi
+@ExperimentalComposeUiApi
+@Composable
+private fun PreviewCollapsibleSearchBar(){
+    UnsplashAPIComposeTheme{
+        CollapsibleSearchBar()
     }
 }

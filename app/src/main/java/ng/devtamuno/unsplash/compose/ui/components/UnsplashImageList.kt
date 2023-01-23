@@ -1,5 +1,6 @@
 package ng.devtamuno.unsplash.compose.ui.components
 
+import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.core.tween
@@ -98,7 +99,8 @@ fun UnsplashImageList(
 
 }
 
-@Preview
+@Preview(name = "Dark", uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Preview(name = "Light", uiMode = Configuration.UI_MODE_NIGHT_NO)
 @Composable
 fun EmptyListStateComponent(
     modifier: Modifier = Modifier,

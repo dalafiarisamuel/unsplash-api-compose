@@ -7,19 +7,11 @@ import androidx.compose.ui.graphics.Color
 
 
 //light theme colors
-val ColorWhiteLight = Color(0xFFFFFFFF)
-val ColorGreyLightLight = Color(0xFFD4D8EB)
-val ColorMatteBlackLight = Color(0xFF212121)
-val ColorDisabledGreyLight = Color(0xFFF5F5FD)
-val ColorGrayDividerLight = Color(0xFFD4D8EB)
+val ColorWhite = Color(0xFFFFFFFF)
 
 
 // dark theme colors
-val ColorWhiteDark = Color(0xFF212121)
-val ColorGreyLightDark = Color(0xFF212121)
-val ColorMatteBlackDark = Color(0xFFFFFFFF)
-val ColorDisabledGreyDark = Color(0xFFF5F5FD)
-val ColorGrayDividerDark = Color(0xFFF5F5FD)
+val ColorMatteBlack = Color(0xFF212121)
 
 val String.color
     get() = Color(android.graphics.Color.parseColor(this))
@@ -28,12 +20,12 @@ val String.color
 val appWhite
     @Composable
     @ReadOnlyComposable
-    get() = if (isSystemInDarkTheme()) ColorWhiteLight else ColorWhiteDark
+    get() = if (isSystemInDarkTheme()) ColorWhite else ColorMatteBlack
 
 val appDark
     @Composable
     @ReadOnlyComposable
-    get() = if (isSystemInDarkTheme()) ColorMatteBlackDark else ColorWhiteLight
+    get() = if (isSystemInDarkTheme()) ColorMatteBlack else ColorWhite
 
 fun Color.complementary() = Color(
     red = 1F - red,

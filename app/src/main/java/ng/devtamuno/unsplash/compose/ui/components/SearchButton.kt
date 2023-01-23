@@ -1,5 +1,6 @@
 package ng.devtamuno.unsplash.compose.ui.components
 
+import android.content.res.Configuration
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -17,7 +18,8 @@ import androidx.compose.ui.unit.dp
 import ng.devtamuno.unsplash.compose.R
 
 @ExperimentalComposeUiApi
-@Preview
+@Preview(name = "Dark", uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Preview(name = "Light", uiMode = Configuration.UI_MODE_NIGHT_NO)
 @Composable
 fun SearchButton(
     modifier: Modifier = Modifier,

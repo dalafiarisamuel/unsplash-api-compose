@@ -27,7 +27,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ng.devtamuno.unsplash.compose.R
-import ng.devtamuno.unsplash.compose.ui.theme.ColorMatteBlackLight
+import ng.devtamuno.unsplash.compose.ui.theme.ColorMatteBlack
+import ng.devtamuno.unsplash.compose.ui.theme.appDark
+import ng.devtamuno.unsplash.compose.ui.theme.appWhite
 
 @ExperimentalComposeUiApi
 @Preview
@@ -70,7 +72,7 @@ fun UnsplashSearchBox(
                 )
             },
             colors = TextFieldDefaults.textFieldColors(
-                textColor = ColorMatteBlackLight,
+                textColor = appWhite,
                 backgroundColor = Color.Transparent,
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent,

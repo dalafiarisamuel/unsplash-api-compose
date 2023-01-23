@@ -1,6 +1,7 @@
 package ng.devtamuno.unsplash.compose.ui.screen
 
 
+import android.content.res.Configuration
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -17,6 +18,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import ng.devtamuno.unsplash.compose.R
 import ng.devtamuno.unsplash.compose.ui.theme.UnsplashAPIComposeTheme
+import ng.devtamuno.unsplash.compose.ui.theme.appDark
+import ng.devtamuno.unsplash.compose.ui.theme.appWhite
 
 @Composable
 fun DownloadImageAlertDialog(
@@ -26,34 +29,36 @@ fun DownloadImageAlertDialog(
     AlertDialog(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(10.dp),
-        backgroundColor = White,
+        backgroundColor = appDark,
         properties = DialogProperties(
             dismissOnBackPress = true,
             dismissOnClickOutside = true
         ),
-        onDismissRequest = onDismissClicked,
+        title = { Text(text = stringResource(R.string.download_image), color = appWhite) },
+        text = {
+            Text(
+                text = stringResource(R.string.are_you_sure_you_want_to_download_this_image),
+                textAlign = TextAlign.Start,
+                color = appWhite
+            )
+        },
         confirmButton = {
             TextButton(onClick = onConfirmedClicked) {
-                Text(text = stringResource(R.string.download))
+                Text(text = stringResource(R.string.download), color = appWhite)
             }
         },
         dismissButton = {
             TextButton(onClick = onDismissClicked) {
-                Text(text = stringResource(R.string.dismiss))
+                Text(text = stringResource(R.string.dismiss), color = appWhite)
             }
         },
-        title = { Text(text = stringResource(R.string.download_image)) },
-        text = {
-            Text(
-                text = stringResource(R.string.are_you_sure_you_want_to_download_this_image),
-                textAlign = TextAlign.Start
-            )
-        }
+        onDismissRequest = onDismissClicked
     )
 }
 
 @ExperimentalFoundationApi
-@Preview
+@Preview(name = "Dark", uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Preview(name = "Light", uiMode = Configuration.UI_MODE_NIGHT_NO)
 @Composable
 private fun PreviewDownloadImageAlertDialog() {
     UnsplashAPIComposeTheme {

@@ -28,7 +28,6 @@ fun CollapsingToolbarBase(
     toolbarOffset: Float,
     content: @Composable BoxScope.() -> Unit
 ) {
-
     val visibility by remember {
         mutableStateOf(MutableTransitionState(true))
     }
@@ -39,9 +38,7 @@ fun CollapsingToolbarBase(
         targetValue = if (scrollDp <= minShrinkHeight) minShrinkHeight else scrollDp,
         animationSpec = tween(300, easing = LinearOutSlowInEasing)
     )
-
     visibility.targetState = animatedCardSize > 70.0.dp
-
 
     AnimatedVisibility(
         visibleState = visibility,
@@ -56,6 +53,5 @@ fun CollapsingToolbarBase(
             content = content
         )
     }
-
 
 }
