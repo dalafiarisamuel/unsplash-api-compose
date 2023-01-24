@@ -11,7 +11,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.*
+import androidx.compose.foundation.lazy.grid.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
@@ -34,14 +34,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.paging.LoadState
-import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
-import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.rememberImagePainter
 import coil.request.ImageRequest
 import coil.request.ImageResult
 import coil.transform.RoundedCornersTransformation
-import kotlinx.coroutines.flow.Flow
 import ng.devtamuno.unsplash.compose.R
 import ng.devtamuno.unsplash.compose.data.model.ui.Photo
 import ng.devtamuno.unsplash.compose.ui.theme.appWhite
@@ -54,12 +51,13 @@ import ng.devtamuno.unsplash.compose.ui.theme.complementary
 fun UnsplashImageList(
     modifier: Modifier,
     imageList: LazyPagingItems<Photo>,
-    lazyListState: LazyListState,
+    lazyListState: LazyGridState,
     nestedScrollConnection: NestedScrollConnection,
     isDataReturnedEmpty: ((Boolean) -> Unit)? = null,
     onItemClicked: (Photo?) -> Unit,
     onItemLongClicked: (Photo?) -> Unit
 ) {
+
 
     LazyVerticalGrid(
         state = lazyListState,
@@ -69,14 +67,16 @@ fun UnsplashImageList(
             .padding(top = 15.dp)
             .nestedScroll(nestedScrollConnection)
             .then(modifier),
-        cells = GridCells.Fixed(2),
+        columns = GridCells.Fixed(2),
         content = {
-            items(imageList) { unsplashImage ->
-                UnsplashImage(
-                    unsplashImage,
-                    onImageClicked = onItemClicked,
-                    onImageLongClicked = onItemLongClicked
-                )
+            items(imageList.itemCount) { index ->
+                with(imageList[index]) {
+                    UnsplashImage(
+                        this,
+                        onImageClicked = onItemClicked,
+                        onImageLongClicked = onItemLongClicked
+                    )
+                }
             }
 
             imageList.apply {
@@ -86,7 +86,7 @@ fun UnsplashImageList(
                         item {
                             LoadingView(
                                 modifier =
-                                Modifier.fillParentMaxSize()
+                                Modifier.wrapContentSize()
                             )
                         }
                     }
@@ -203,6 +203,7 @@ private fun UnsplashImage(
 }
 
 
+/*
 @ExperimentalFoundationApi
 public fun <T : Any> LazyGridScope.items(
     lazyPagingItems: LazyPagingItems<T>,
@@ -211,4 +212,4 @@ public fun <T : Any> LazyGridScope.items(
     items(lazyPagingItems.itemCount) { index ->
         itemContent(lazyPagingItems[index])
     }
-}
+}*/

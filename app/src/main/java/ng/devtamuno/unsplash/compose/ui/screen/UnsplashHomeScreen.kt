@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
@@ -49,7 +50,7 @@ fun UnsplashHomeScreen() {
 
     val viewModel: ImageListViewModel = viewModel()
 
-    val listScrollState = rememberLazyListState()
+    val listScrollState = rememberLazyGridState()
     val coroutine = rememberCoroutineScope()
     val context = LocalContext.current
 

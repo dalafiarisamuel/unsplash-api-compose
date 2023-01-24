@@ -1,17 +1,16 @@
 object Versions {
-    const val gradle = "7.0.4"
-    const val compilesdk = 31
+    const val gradle = "7.4.0"
+    const val compilesdk = 33
     const val minsdk = 23
-    const val targetsdk = 23
-    const val kotlin = "1.5.31"
+    const val targetsdk = 33
+    const val kotlin = "1.7.0"
     const val ktx = "1.7.0"
-    const val room = "2.2.5"
     const val appcompat = "1.4.0"
     const val materialDesign = "1.4.0"
-    const val kotlinCoroutineVersion = "1.3.0"
+    const val kotlinCoroutineVersion = "1.6.4"
     const val retrofit2 = "2.9.0"
     const val retrofit2ConverterMoshi = "2.9.0"
-    const val moshiKotlin = "1.12.0"
+    const val moshiKotlin = "1.14.0"
     const val moshiKotlinCodegen = moshiKotlin
     const val ioCard = "5.5.1"
     const val androidLifecycle= "2.4.1"
@@ -23,10 +22,10 @@ object Versions {
     const val espressoContrib = "3.3.0"
     const val androidxTestExt = "1.1.2"
     const val navigationSafeArgs = "2.3.3"
-    const val hiltVersion = "2.40.5"
+    const val hiltVersion = "2.44.2"
     const val javaxInject = "1"
     const val hiltViewModel = "1.0.0-alpha02"
-    const val androidxFragmentKtx = "1.3.2"
+    const val androidxFragmentKtx = "1.4.1"
     const val hiltWorker = "1.0.0-beta01"
     const val workManager = "2.4.0"
     const val hamcrest = "1.3"
@@ -39,6 +38,6 @@ object Versions {
     const val okHttpMockServer = "4.7.2"
     const val okHttp = "4.2.2"
     const val retroMock = "1.1.0"
-    const val composeVersion = "1.1.0"
+    const val composeVersion = "1.3.3"
     const val savedState = "2.5.0"
 }

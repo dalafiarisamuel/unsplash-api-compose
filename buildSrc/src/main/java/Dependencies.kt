@@ -13,8 +13,6 @@ object Dependencies {
         "com.squareup.retrofit2:converter-moshi:${Versions.retrofit2ConverterMoshi}"
     private const val moshiKotlin = "com.squareup.moshi:moshi-kotlin:${Versions.moshiKotlin}"
     private const val ioCardAndroidSdk = "io.card:android-sdk:${Versions.ioCard}"
-    private const val roomRuntime = "androidx.room:room-runtime:${Versions.room}"
-    private const val roomKtx = "androidx.room:room-ktx:${Versions.room}"
     private const val hiltAndroid = "com.google.dagger:hilt-android:${Versions.hiltVersion}"
     private const val javaxInject = "javax.inject:javax.inject:${Versions.javaxInject}"
     private const val hiltViewModel =
@@ -42,7 +40,7 @@ object Dependencies {
 
         private const val composeUi = "androidx.compose.ui:ui:${Versions.composeVersion}"
         private const val composeMaterial =
-            "androidx.compose.material:material:${Versions.composeVersion}"
+            "androidx.compose.material:material:1.3.1"
         private const val composeRuntimeLiveData =
             "androidx.compose.runtime:runtime-livedata:${Versions.composeVersion}"
         private const val composeUiToolingPreview =
@@ -76,11 +74,8 @@ object Dependencies {
         retrofitMoshiConverter,
         moshiKotlin,
         ioCardAndroidSdk,
-        roomRuntime,
-        roomKtx,
         hiltAndroid,
         javaxInject,
-        hiltViewModel,
         hiltWorker,
         workManager,
         workManagerSupport,

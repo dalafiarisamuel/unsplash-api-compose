@@ -7,7 +7,6 @@ object TestDependencies {
         "org.jetbrains.kotlinx:kotlinx-coroutines-test:${Versions.kotlinCoroutineVersion}"
     private const val googleTruth = "com.google.truth:truth:${Versions.googleTruth}"
     private const val mockito = "org.mockito:mockito-core:${Versions.mockito}"
-    private const val androidXcore = "androidx.arch.core:core-testing:${Versions.androidXcore}"
     private const val okHttpMockServer =
         "com.squareup.okhttp3:mockwebserver:${Versions.okHttpMockServer}"
 
@@ -19,7 +18,6 @@ object TestDependencies {
             kotlinxCouroutine,
             googleTruth,
             mockito,
-            androidXcore,
             okHttpMockServer
         )
 }

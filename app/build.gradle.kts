@@ -52,7 +52,11 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.0.5"
+        kotlinCompilerExtensionVersion = "1.2.0"
+    }
+
+    kapt {
+        correctErrorTypes = true
     }
 
     kotlinOptions {

@@ -1,7 +1,7 @@
 package ng.devtamuno.unsplash.compose.ui.theme
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.gestures.LocalOverScrollConfiguration
+import androidx.compose.foundation.LocalOverscrollConfiguration
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.darkColors
@@ -48,7 +48,7 @@ fun UnsplashAPIComposeTheme(
         shapes = Shapes
     ) {
         CompositionLocalProvider(
-            LocalOverScrollConfiguration provides null,
+            LocalOverscrollConfiguration provides null,
             content = content
         )
 
