@@ -45,7 +45,7 @@ fun UnsplashSearchBox(
     Row(
         modifier = modifier
             .background(
-                shape = RoundedCornerShape(15.dp),
+                shape = RoundedCornerShape(10.dp),
                 color = colorResource(
                     id = R.color.colorDisabledGray
                 )
@@ -53,7 +53,7 @@ fun UnsplashSearchBox(
             .border(
                 width = 1.dp,
                 color = colorResource(id = R.color.colorGrayDivider),
-                shape = RoundedCornerShape(15.dp)
+                shape = RoundedCornerShape(10.dp)
             )
             .wrapContentHeight()
     ) {

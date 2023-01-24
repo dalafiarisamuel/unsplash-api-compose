@@ -91,20 +91,20 @@ private fun DialogContent(
     ) {
 
         Card(
-            elevation = 4.dp,
-            shape = RoundedCornerShape(10.dp),
+            backgroundColor = imageColorParsed,
+            elevation = 0.dp,
+            shape = RoundedCornerShape(0.dp),
             modifier = Modifier
                 .fillMaxSize()
         ) {
             Image(
                 painter = rememberImagePainter(imageUrl) {
-                    transformations(RoundedCornersTransformation(10f))
+                    //transformations(RoundedCornersTransformation(10f))
                     listener(imageRequestListener)
                 },
-                contentScale = ContentScale.Crop,
+                contentScale = ContentScale.Inside,
                 contentDescription = authorOrDescriptionText,
-                modifier = Modifier.fillMaxSize()
-                /*.aspectRatio(4 / 3f)*/
+                modifier = Modifier.wrapContentSize()
             )
 
         }
@@ -163,6 +163,5 @@ private fun DialogContent(
             )
         }
     }
-
 
 }
