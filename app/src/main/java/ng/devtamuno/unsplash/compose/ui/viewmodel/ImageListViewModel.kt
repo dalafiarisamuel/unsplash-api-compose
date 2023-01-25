@@ -10,8 +10,7 @@ import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.*
 import ng.devtamuno.unsplash.compose.data.mapper.PhotoMapper
 import ng.devtamuno.unsplash.compose.data.model.ui.Photo
 import ng.devtamuno.unsplash.compose.data.repository.ImageRepository
@@ -32,13 +31,23 @@ class ImageListViewModel @Inject constructor(
     var textFieldState by mutableStateOf("")
 
     private var currentQuery: MutableStateFlow<String>
+    private val randomDefaultQuery get() = DEFAULT_QUERY.random()
 
     init {
-        currentQuery = MutableStateFlow(state[CURRENT_QUERY] ?: DEFAULT_QUERY)
+        currentQuery = MutableStateFlow(state[CURRENT_QUERY] ?: randomDefaultQuery)
+        watchCurrentQueryField()
     }
 
     private fun setSearchTerm(query: String) {
-        currentQuery.value = query.ifEmpty { DEFAULT_QUERY }
+        currentQuery.value = query.ifEmpty { randomDefaultQuery }
+    }
+
+    private fun watchCurrentQueryField() {
+        currentQuery
+            .flatMapMerge<String, Unit> {
+                selectedChipState = it
+                flowOf(Unit)
+            }.launchIn(viewModelScope)
     }
 
     fun searchCurrentQuery() {
@@ -50,7 +59,6 @@ class ImageListViewModel @Inject constructor(
         textFieldState = term
         setSearchTerm(term)
     }
-
 
     val photos = currentQuery.flatMapLatest { queryString ->
         getImageSearchResult(queryString).cachedIn(viewModelScope)
@@ -79,6 +87,6 @@ class ImageListViewModel @Inject constructor(
 
     companion object {
         private const val CURRENT_QUERY = "current_query"
-        const val DEFAULT_QUERY = "corgi"
+        private val DEFAULT_QUERY = listOf("corgi", "comet", "ai", "dreams")
     }
 }

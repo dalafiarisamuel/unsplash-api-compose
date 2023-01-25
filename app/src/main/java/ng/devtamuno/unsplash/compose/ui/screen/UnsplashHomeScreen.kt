@@ -57,7 +57,6 @@ fun UnsplashHomeScreen() {
     var selectedImage by remember { mutableStateOf<Photo?>(null) }
     var isDialogVisible by remember { mutableStateOf(false) }
     var isDownloadImageDialogVisible by remember { mutableStateOf(false) }
-    val isListEmpty = remember { MutableTransitionState(false) }
 
     val toolbarHeight = 105.dp
     val toolbarHeightPx = with(LocalDensity.current) { toolbarHeight.roundToPx().toFloat() }
@@ -130,9 +129,6 @@ fun UnsplashHomeScreen() {
             imageList = viewModel.photos.collectAsLazyPagingItems(),
             lazyListState = listScrollState,
             nestedScrollConnection = nestedScrollConnection,
-            isDataReturnedEmpty = {
-                isListEmpty.targetState = it
-            },
             onItemClicked = {
                 selectedImage = it
                 isDialogVisible = true
@@ -150,18 +146,6 @@ fun UnsplashHomeScreen() {
                     }
                 }
             })
-
-        AnimatedVisibility(
-            visibleState = isListEmpty,
-            enter = fadeIn(initialAlpha = 0.4f),
-            exit = fadeOut(tween(durationMillis = 250))
-        ) {
-            EmptyListStateComponent(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .align(Alignment.CenterHorizontally)
-            )
-        }
 
         if (isDialogVisible) {
             ImagePreviewDialog(photo = selectedImage) {

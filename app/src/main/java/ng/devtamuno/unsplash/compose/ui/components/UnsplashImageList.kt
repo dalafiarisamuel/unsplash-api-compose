@@ -2,6 +2,7 @@ package ng.devtamuno.unsplash.compose.ui.components
 
 import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -17,10 +18,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -53,14 +51,45 @@ fun UnsplashImageList(
     imageList: LazyPagingItems<Photo>,
     lazyListState: LazyGridState,
     nestedScrollConnection: NestedScrollConnection,
-    isDataReturnedEmpty: ((Boolean) -> Unit)? = null,
     onItemClicked: (Photo?) -> Unit,
     onItemLongClicked: (Photo?) -> Unit
 ) {
 
+    val isListEmpty by remember { derivedStateOf { imageList.itemCount <= 0 } }
 
-    LazyVerticalGrid(
-        state = lazyListState,
+    if (imageList.loadState.refresh is LoadState.Loading) {
+        LoadingView(
+            modifier = Modifier.fillMaxSize()
+        )
+    } else {
+        Crossfade(targetState = isListEmpty) {
+            if (it) {
+                EmptyListStateComponent(modifier = Modifier.fillMaxSize())
+            } else {
+                PhotosList(
+                    modifier = modifier,
+                    imageList = imageList,
+                    lazyListState = lazyListState,
+                    nestedScrollConnection = nestedScrollConnection,
+                    onItemClicked = onItemClicked,
+                    onItemLongClicked = onItemLongClicked,
+                )
+            }
+        }
+    }
+}
+
+@ExperimentalFoundationApi
+@Composable
+private fun PhotosList(
+    modifier: Modifier,
+    imageList: LazyPagingItems<Photo>,
+    lazyListState: LazyGridState,
+    nestedScrollConnection: NestedScrollConnection,
+    onItemClicked: (Photo?) -> Unit,
+    onItemLongClicked: (Photo?) -> Unit
+) {
+    LazyVerticalGrid(state = lazyListState,
         verticalArrangement = Arrangement.spacedBy(8.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         modifier = Modifier
@@ -69,34 +98,15 @@ fun UnsplashImageList(
             .then(modifier),
         columns = GridCells.Fixed(2),
         content = {
-            items(imageList.itemCount) { index ->
-                with(imageList[index]) {
-                    UnsplashImage(
-                        this,
-                        onImageClicked = onItemClicked,
-                        onImageLongClicked = onItemLongClicked
-                    )
-                }
-            }
-
-            imageList.apply {
-                isDataReturnedEmpty?.invoke(imageList.itemCount <= 0)
-                when {
-                    loadState.refresh is LoadState.Loading -> {
-                        item {
-                            LoadingView(
-                                modifier =
-                                Modifier.wrapContentSize()
-                            )
-                        }
-                    }
-                    loadState.append is LoadState.Loading -> {
-                        item { LoadingItem() }
-                    }
-                }
+            items(imageList) { photo ->
+                UnsplashImage(
+                    modifier = Modifier.animateItemPlacement(),
+                    data = photo,
+                    onImageClicked = onItemClicked,
+                    onImageLongClicked = onItemLongClicked
+                )
             }
         })
-
 }
 
 @Preview(name = "Dark", uiMode = Configuration.UI_MODE_NIGHT_YES)
@@ -137,6 +147,7 @@ fun EmptyListStateComponent(
 @ExperimentalFoundationApi
 @Composable
 private fun UnsplashImage(
+    modifier: Modifier,
     data: Photo?,
     onImageClicked: (Photo?) -> Unit,
     onImageLongClicked: (Photo?) -> Unit
@@ -148,8 +159,7 @@ private fun UnsplashImage(
     val imageRequestListener = remember {
         object : ImageRequest.Listener {
             override fun onSuccess(
-                request: ImageRequest,
-                metadata: ImageResult.Metadata
+                request: ImageRequest, metadata: ImageResult.Metadata
             ) {
                 super.onSuccess(request, metadata)
                 isShowProgress.targetState = false
@@ -164,7 +174,9 @@ private fun UnsplashImage(
     }
 
     Box(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
+            .then(modifier)
     ) {
 
         Card(
@@ -203,13 +215,12 @@ private fun UnsplashImage(
 }
 
 
-/*
 @ExperimentalFoundationApi
-public fun <T : Any> LazyGridScope.items(
+private fun <T : Any> LazyGridScope.items(
     lazyPagingItems: LazyPagingItems<T>,
-    itemContent: @Composable LazyItemScope.(value: T?) -> Unit
+    itemContent: @Composable LazyGridItemScope.(value: T?) -> Unit
 ) {
     items(lazyPagingItems.itemCount) { index ->
         itemContent(lazyPagingItems[index])
     }
-}*/
+}
