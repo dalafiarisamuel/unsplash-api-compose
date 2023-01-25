@@ -89,7 +89,7 @@ fun ChipGroup(
             items(itemList) { chip ->
                 Chip(
                     chip = chip,
-                    isSelected = selectedText == chip.chipText,
+                    isSelected = selectedText?.equals(chip.chipText, ignoreCase = true) ?: false,
                     onSelectionChanged = {
                         onSelectedChanged(it)
                     }
