@@ -19,12 +19,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ng.devtamuno.unsplash.compose.R
+import ng.devtamuno.unsplash.compose.data.model.ui.ChipData
 import ng.devtamuno.unsplash.compose.ui.theme.appDark
 import ng.devtamuno.unsplash.compose.ui.theme.appWhite
 
 
-@Preview(name = "Chip Light", uiMode = Configuration.UI_MODE_NIGHT_NO)
-@Preview(name = "Chip Dark", uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Preview(name = "Light", uiMode = Configuration.UI_MODE_NIGHT_NO)
+@Preview(name = "Dark", uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun Chip(
     chip: ChipData = ChipData(
@@ -54,7 +55,7 @@ fun Chip(
             )
         ) {
             Text(
-                text = chip.emoji + " " + chip.chipText,
+                text = chip.displayText,
                 style = MaterialTheme.typography.caption,
                 color = if (isSelected) appDark else appWhite,
                 modifier = Modifier.padding(8.dp)
@@ -185,5 +186,3 @@ fun ChipComponent(
     }
 
 }
-
-data class ChipData(val emoji: String, val chipText: String)
