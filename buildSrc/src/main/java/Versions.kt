@@ -3,7 +3,7 @@ object Versions {
     const val compilesdk = 33
     const val minsdk = 23
     const val targetsdk = 33
-    const val kotlin = "1.7.0"
+    const val kotlin = "1.8.0"
     const val ktx = "1.7.0"
     const val appcompat = "1.4.0"
     const val materialDesign = "1.4.0"
@@ -38,6 +38,6 @@ object Versions {
     const val okHttpMockServer = "4.7.2"
     const val okHttp = "4.2.2"
     const val retroMock = "1.1.0"
-    const val composeVersion = "1.3.3"
+    const val composeVersion = "1.4.0-alpha05"
     const val savedState = "2.5.0"
 }
