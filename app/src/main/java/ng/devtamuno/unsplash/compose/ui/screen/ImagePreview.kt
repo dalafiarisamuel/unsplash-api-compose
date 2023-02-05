@@ -5,8 +5,10 @@ import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
@@ -29,7 +31,6 @@ import androidx.compose.ui.window.DialogProperties
 import coil.compose.rememberImagePainter
 import coil.request.ImageRequest
 import coil.request.ImageResult
-import coil.transform.RoundedCornersTransformation
 import ng.devtamuno.unsplash.compose.R
 import ng.devtamuno.unsplash.compose.data.model.ui.Photo
 import ng.devtamuno.unsplash.compose.ui.theme.color
@@ -55,6 +56,7 @@ fun ImagePreviewDialog(photo: Photo?, onDismissCLicked: () -> Unit) {
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Preview
 @Composable
 private fun DialogContent(
@@ -147,6 +149,7 @@ private fun DialogContent(
                     .fillMaxWidth()
                     .padding(start = 10.dp, end = 10.dp)
                     .align(Alignment.CenterVertically)
+                    .basicMarquee()
             )
 
         }
