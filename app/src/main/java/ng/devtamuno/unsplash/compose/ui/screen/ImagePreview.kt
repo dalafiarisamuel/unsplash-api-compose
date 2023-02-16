@@ -95,9 +95,8 @@ private fun DialogContent(
         Card(
             backgroundColor = imageColorParsed,
             elevation = 0.dp,
-            shape = RoundedCornerShape(0.dp),
-            modifier = Modifier
-                .fillMaxSize()
+            shape = RoundedCornerShape(10.dp),
+            modifier = Modifier.fillMaxSize()
         ) {
             Image(
                 painter = rememberImagePainter(imageUrl) {
