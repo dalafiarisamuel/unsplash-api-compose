@@ -18,14 +18,28 @@ import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
+import ng.devtamuno.unsplash.compose.data.repository.ImageRepository
+import ng.devtamuno.unsplash.compose.data.repository.ImageRepositoryImpl
 
 @InstallIn(SingletonComponent::class)
 @Module
 object ApplicationModule {
 
     @[Provides Singleton]
-    fun providesRetrofit(): Retrofit {
+    fun providesRetrofit(client: OkHttpClient): Retrofit {
+        val moshi = Moshi.Builder()
+            .add(KotlinJsonAdapterFactory())
+            .build()
 
+        return Retrofit.Builder()
+            .baseUrl("https://api.unsplash.com/")
+            .addConverterFactory(MoshiConverterFactory.create(moshi))
+            .client(client)
+            .build()
+    }
+
+    @[Provides Singleton]
+    fun providesOkhttpClient(): OkHttpClient {
         val okHttpBuilder = OkHttpClient.Builder()
             .followRedirects(true)
             .followSslRedirects(true)
@@ -40,20 +54,16 @@ object ApplicationModule {
                 .header("Authorization", " Client-ID ${Env.API_KEY}")
             chain.proceed(newRequest.build())
         }
-        val moshi = Moshi.Builder()
-            .add(KotlinJsonAdapterFactory())
-            .build()
-
-        return Retrofit.Builder()
-            .baseUrl("https://api.unsplash.com/")
-            .addConverterFactory(MoshiConverterFactory.create(moshi))
-            .client(okHttpBuilder.build())
-            .build()
+        return okHttpBuilder.build()
     }
 
     @[Provides Singleton]
     fun providesApiInterface(retrofit: Retrofit): ApiInterface =
         retrofit.create(ApiInterface::class.java)
+
+    @[Provides Singleton]
+    fun providesImageRepository(api: ApiInterface): ImageRepository =
+        ImageRepositoryImpl(api)
 
     @[Provides Singleton]
     fun providesLocalFileDownloader(
