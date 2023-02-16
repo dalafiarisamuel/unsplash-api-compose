@@ -1,9 +1,6 @@
 package ng.devtamuno.unsplash.compose.ui.viewmodel
 
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.*
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
@@ -12,23 +9,22 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
 import ng.devtamuno.unsplash.compose.data.mapper.PhotoMapper
-import ng.devtamuno.unsplash.compose.data.model.ui.Photo
 import ng.devtamuno.unsplash.compose.data.repository.ImageRepository
 import ng.devtamuno.unsplash.compose.data.source.ImagePagingSource
 import ng.devtamuno.unsplash.compose.file.FileDownloader
 import javax.inject.Inject
+import kotlinx.coroutines.FlowPreview
+import ng.devtamuno.unsplash.compose.ui.event.HomeScreenEvent
+import ng.devtamuno.unsplash.compose.ui.state.HomeScreenState
 
-@OptIn(ExperimentalCoroutinesApi::class)
+@OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
 @HiltViewModel
 class ImageListViewModel @Inject constructor(
     private val repository: ImageRepository,
     private val photoMapper: PhotoMapper,
     private val fileDownloader: FileDownloader,
     state: SavedStateHandle
-) : ViewModel() {
-
-    var selectedChipState by mutableStateOf("")
-    var textFieldState by mutableStateOf("")
+) : MviViewModel<HomeScreenEvent, HomeScreenState>(HomeScreenState()) {
 
     private var currentQuery: MutableStateFlow<String>
     private val randomDefaultQuery get() = DEFAULT_QUERY.random()
@@ -36,6 +32,22 @@ class ImageListViewModel @Inject constructor(
     init {
         currentQuery = MutableStateFlow(state[CURRENT_QUERY] ?: randomDefaultQuery)
         watchCurrentQueryField()
+
+        handleSelectImage()
+        handleSearchEvent()
+
+        handleSelectChipEvent()
+        handleDownloadSelectedImageEvent()
+        handleUpdateSearchFieldEvent()
+
+        handleOpenDownloadImagePreviewDialogEvent()
+        handleDismissDownloadImagePreviewDialogEvent()
+
+        handleOpenImagePreviewDialogEvent()
+        handleDismissImagePreviewDialogEvent()
+
+        handleOnImageClicked()
+        handleOnLongClicked()
     }
 
     private fun setSearchTerm(query: String) {
@@ -44,25 +56,18 @@ class ImageListViewModel @Inject constructor(
 
     private fun watchCurrentQueryField() {
         currentQuery
+            .debounce(800)
             .flatMapMerge<String, Unit> {
-                selectedChipState = it
+                state = state.copy(searchFieldValue = it)
                 flowOf(Unit)
             }.launchIn(viewModelScope)
     }
 
-    fun searchCurrentQuery() {
-        setSearchTerm(textFieldState)
-    }
-
-    fun updateSelectedChipState(term: String) {
-        selectedChipState = term
-        textFieldState = term
-        setSearchTerm(term)
-    }
-
-    val photos = currentQuery.flatMapLatest { queryString ->
-        getImageSearchResult(queryString).cachedIn(viewModelScope)
-    }
+    val photos = currentQuery
+        .debounce(800)
+        .flatMapLatest { queryString ->
+            getImageSearchResult(queryString).cachedIn(viewModelScope)
+        }
 
     private fun getImageSearchResult(query: String) = Pager(
         config = PagingConfig(
@@ -79,14 +84,89 @@ class ImageListViewModel @Inject constructor(
         }
     ).flow
 
-    fun downloadFile(photo: Photo?) {
-        if (photo != null) {
-            fileDownloader.downloadImageFileToDownloadFolder(photo.urls.full)
+    companion object {
+        private const val CURRENT_QUERY = "current_query"
+        private val DEFAULT_QUERY = listOf("Corgi", "Comet", "AI", "Dreams")
+    }
+
+    private fun handleDownloadSelectedImageEvent() {
+        on<HomeScreenEvent.DownloadSelectedImage> {
+            val selectedImage = state.selectedImage
+            if (selectedImage != null) {
+                fileDownloader.downloadImageFileToDownloadFolder(selectedImage.urls.full)
+            }
         }
     }
 
-    companion object {
-        private const val CURRENT_QUERY = "current_query"
-        private val DEFAULT_QUERY = listOf("corgi", "comet", "ai", "dreams")
+    private fun handleSelectChipEvent() {
+        on<HomeScreenEvent.SelectChip> {
+            state = state.copy(
+                searchFieldValue = it.chipValue
+            )
+            setSearchTerm(state.searchFieldValue)
+        }
+    }
+
+    private fun handleSelectImage() {
+        on<HomeScreenEvent.SelectImage> {
+            state = state.copy(selectedImage = it.image)
+        }
+    }
+
+    private fun handleSearchEvent() {
+        on<HomeScreenEvent.Search> {
+            setSearchTerm(state.searchFieldValue)
+        }
+    }
+
+    private fun handleUpdateSearchFieldEvent() {
+        on<HomeScreenEvent.UpdateSearchField> {
+            state = state.copy(
+                searchFieldValue = it.searchTerm
+            )
+            setSearchTerm(state.searchFieldValue)
+        }
+    }
+
+    private fun handleDismissImagePreviewDialogEvent() {
+        on<HomeScreenEvent.ImagePreviewDialog.Dismiss> {
+            state = state.copy(isImagePreviewDialogVisible = false)
+        }
+    }
+
+    private fun handleOpenImagePreviewDialogEvent() {
+        on<HomeScreenEvent.ImagePreviewDialog.Open> {
+            state = state.copy(isImagePreviewDialogVisible = true)
+        }
+    }
+
+    private fun handleOpenDownloadImagePreviewDialogEvent() {
+        on<HomeScreenEvent.DownloadImageDialog.Open> {
+            state = state.copy(isDownloadImageDialogVisible = true)
+        }
+    }
+
+    private fun handleDismissDownloadImagePreviewDialogEvent() {
+        on<HomeScreenEvent.DownloadImageDialog.Dismiss> {
+            state = state.copy(isDownloadImageDialogVisible = false)
+        }
+    }
+
+    private fun handleOnImageClicked() {
+        on<HomeScreenEvent.OnImageClicked> {
+            state = state.copy(
+                selectedImage = it.image,
+                isImagePreviewDialogVisible = true
+            )
+        }
+    }
+
+    private fun handleOnLongClicked() {
+        on<HomeScreenEvent.OnImageLongClicked> {
+            state = state.copy(
+                selectedImage = it.image,
+                isDownloadImageDialogVisible = true
+            )
+        }
     }
 }

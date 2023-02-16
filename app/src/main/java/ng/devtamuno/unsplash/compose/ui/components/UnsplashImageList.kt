@@ -89,7 +89,8 @@ private fun PhotosList(
     onItemClicked: (Photo?) -> Unit,
     onItemLongClicked: (Photo?) -> Unit
 ) {
-    LazyVerticalGrid(state = lazyListState,
+    LazyVerticalGrid(
+        state = lazyListState,
         verticalArrangement = Arrangement.spacedBy(8.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         modifier = Modifier
