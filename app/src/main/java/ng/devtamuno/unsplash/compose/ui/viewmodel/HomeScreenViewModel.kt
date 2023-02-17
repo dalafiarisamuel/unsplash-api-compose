@@ -19,12 +19,17 @@ import ng.devtamuno.unsplash.compose.ui.state.HomeScreenState
 
 @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
 @HiltViewModel
-class ImageListViewModel @Inject constructor(
+class HomeScreenViewModel @Inject constructor(
     private val repository: ImageRepository,
     private val photoMapper: PhotoMapper,
     private val fileDownloader: FileDownloader,
     state: SavedStateHandle
 ) : MviViewModel<HomeScreenEvent, HomeScreenState>(HomeScreenState()) {
+
+    companion object {
+        private const val CURRENT_QUERY = "current_query"
+        private val DEFAULT_QUERY = listOf("Corgi", "Comet", "AI", "Dreams")
+    }
 
     private var currentQuery: MutableStateFlow<String>
     private val randomDefaultQuery get() = DEFAULT_QUERY.random()
@@ -83,11 +88,6 @@ class ImageListViewModel @Inject constructor(
             )
         }
     ).flow
-
-    companion object {
-        private const val CURRENT_QUERY = "current_query"
-        private val DEFAULT_QUERY = listOf("Corgi", "Comet", "AI", "Dreams")
-    }
 
     private fun handleDownloadSelectedImageEvent() {
         on<HomeScreenEvent.DownloadSelectedImage> {

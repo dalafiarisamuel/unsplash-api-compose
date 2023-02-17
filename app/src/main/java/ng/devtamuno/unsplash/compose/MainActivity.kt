@@ -9,14 +9,14 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import dagger.hilt.android.AndroidEntryPoint
 import ng.devtamuno.unsplash.compose.ui.screen.HomeScreen
 import ng.devtamuno.unsplash.compose.ui.theme.UnsplashAPIComposeTheme
-import ng.devtamuno.unsplash.compose.ui.viewmodel.ImageListViewModel
+import ng.devtamuno.unsplash.compose.ui.viewmodel.HomeScreenViewModel
 
 @ExperimentalFoundationApi
 @ExperimentalComposeUiApi
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    private val viewModel: ImageListViewModel by viewModels()
+    private val viewModel: HomeScreenViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
