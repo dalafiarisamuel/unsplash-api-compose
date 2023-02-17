@@ -1,4 +1,4 @@
-## Unsplash-API-Compose
+## Unsplash-API-Compose [![CI](https://github.com/dalafiarisamuel/unsplash-api-compose/actions/workflows/workflow.yml/badge.svg?branch=master)](https://github.com/dalafiarisamuel/unsplash-api-compose/actions/workflows/workflow.yml)
 
 A project to display images from https://unsplash.com API using Jetpack Compose
 
