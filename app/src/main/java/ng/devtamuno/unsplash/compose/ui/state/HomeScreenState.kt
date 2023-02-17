@@ -6,5 +6,5 @@ data class HomeScreenState(
     val selectedImage: Photo? = null,
     val isImagePreviewDialogVisible: Boolean = false,
     val isDownloadImageDialogVisible: Boolean = false,
-    val searchFieldValue: String = ""
+    val searchFieldValue: String = "",
 )

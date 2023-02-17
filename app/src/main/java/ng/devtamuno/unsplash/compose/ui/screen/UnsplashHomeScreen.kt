@@ -2,6 +2,7 @@ package ng.devtamuno.unsplash.compose.ui.screen
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.content.res.Configuration
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -23,32 +24,38 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 import ng.devtamuno.unsplash.compose.R
+import ng.devtamuno.unsplash.compose.data.model.ui.Photo
+import ng.devtamuno.unsplash.compose.data.model.ui.PhotoUrls
+import ng.devtamuno.unsplash.compose.data.model.ui.dummyPhoto
 import ng.devtamuno.unsplash.compose.ui.components.*
 import ng.devtamuno.unsplash.compose.ui.event.HomeScreenEvent
+import ng.devtamuno.unsplash.compose.ui.state.HomeScreenState
+import ng.devtamuno.unsplash.compose.ui.theme.UnsplashAPIComposeTheme
 import ng.devtamuno.unsplash.compose.ui.theme.appWhite
-import ng.devtamuno.unsplash.compose.ui.viewmodel.ImageListViewModel
 
 @ExperimentalFoundationApi
 @ExperimentalComposeUiApi
 @Composable
-fun UnsplashHomeScreen() {
-
-    val viewModel: ImageListViewModel = viewModel()
+fun HomeScreen(
+    state: HomeScreenState = HomeScreenState(),
+    imageList: Flow<PagingData<Photo>> = flowOf(PagingData.empty()),
+    dispatch: (HomeScreenEvent) -> Unit = {}
+) {
 
     val listScrollState = rememberLazyGridState()
     val coroutine = rememberCoroutineScope()
     val context = LocalContext.current
-
-    val screenState = viewModel.state
 
     val toolbarHeight = 105.dp
     val toolbarHeightPx = with(LocalDensity.current) { toolbarHeight.roundToPx().toFloat() }
@@ -71,7 +78,7 @@ fun UnsplashHomeScreen() {
         ActivityResultContracts.RequestPermission()
     ) { isGranted: Boolean ->
         if (isGranted) {
-            viewModel.dispatch(HomeScreenEvent.ImagePreviewDialog.Open)
+            dispatch(HomeScreenEvent.ImagePreviewDialog.Open)
         }
     }
 
@@ -98,64 +105,87 @@ fun UnsplashHomeScreen() {
                 coroutine.launch(Dispatchers.Main) {
                     listScrollState.scrollToItem(0)
                 }
-                viewModel.dispatch(HomeScreenEvent.Search)
+                dispatch(HomeScreenEvent.Search)
             },
-            textValue = screenState.searchFieldValue,
+            textValue = state.searchFieldValue,
             textValueChange = {
-                viewModel.dispatch(HomeScreenEvent.UpdateSearchField(it))
+                dispatch(HomeScreenEvent.UpdateSearchField(it))
             },
         )
 
         ChipComponent(
             modifier = Modifier.padding(top = 20.dp),
-            selectedText = screenState.searchFieldValue,
+            selectedText = state.searchFieldValue,
         ) {
             coroutine.launch(Dispatchers.Main) {
                 listScrollState.scrollToItem(0)
             }
-            viewModel.dispatch(HomeScreenEvent.SelectChip(it))
+            dispatch(HomeScreenEvent.SelectChip(it))
         }
 
         UnsplashImageList(
             modifier = Modifier.fillMaxSize(),
-            imageList = viewModel.photos.collectAsLazyPagingItems(),
+            imageList = imageList.collectAsLazyPagingItems(),
             lazyListState = listScrollState,
             nestedScrollConnection = nestedScrollConnection,
             onItemClicked = {
-                viewModel.dispatch(HomeScreenEvent.OnImageClicked(it))
+                dispatch(HomeScreenEvent.OnImageClicked(it))
             },
             onItemLongClicked = {
                 when (PackageManager.PERMISSION_GRANTED) {
                     ContextCompat.checkSelfPermission(
                         context, Manifest.permission.WRITE_EXTERNAL_STORAGE
                     ) -> {
-                        viewModel.dispatch(HomeScreenEvent.OnImageLongClicked(it))
+                        dispatch(HomeScreenEvent.OnImageLongClicked(it))
                     }
                     else -> {
                         launcher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
                     }
                 }
-            })
+            }
+        )
 
-        if (screenState.isImagePreviewDialogVisible) {
-            ImagePreviewDialog(photo = screenState.selectedImage) {
-                viewModel.dispatch(HomeScreenEvent.ImagePreviewDialog.Dismiss)
+        if (state.isImagePreviewDialogVisible) {
+            ImagePreviewDialog(
+                photo = state.selectedImage
+            ) {
+                dispatch(HomeScreenEvent.ImagePreviewDialog.Dismiss)
             }
         }
 
-        if (screenState.isDownloadImageDialogVisible) {
-            val message = stringResource(R.string.download_has_started)
+        if (state.isDownloadImageDialogVisible) {
             DownloadImageAlertDialog(
                 onDismissClicked = {
-                    viewModel.dispatch(HomeScreenEvent.DownloadImageDialog.Dismiss)
+                    dispatch(HomeScreenEvent.DownloadImageDialog.Dismiss)
                 },
                 onConfirmedClicked = {
-                    viewModel.dispatch(HomeScreenEvent.DownloadImageDialog.Dismiss)
-                    viewModel.dispatch(HomeScreenEvent.DownloadSelectedImage)
-                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                    dispatch(HomeScreenEvent.DownloadImageDialog.Dismiss)
+                    dispatch(HomeScreenEvent.DownloadSelectedImage)
+                    Toast.makeText(context, R.string.download_has_started, Toast.LENGTH_SHORT)
+                        .show()
                 }
             )
         }
     }
 
+}
+
+@ExperimentalComposeUiApi
+@OptIn(ExperimentalFoundationApi::class)
+@Preview(name = "Dark", uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
+@Preview(name = "Light", uiMode = Configuration.UI_MODE_NIGHT_NO, showBackground = true)
+@Composable
+private fun PreviewHomeScreen() {
+
+    UnsplashAPIComposeTheme {
+        HomeScreen(
+            state = HomeScreenState(
+                selectedImage = dummyPhoto,
+                isImagePreviewDialogVisible = true,
+                isDownloadImageDialogVisible = false,
+                searchFieldValue = "Comet"
+            ),
+            imageList = flowOf(PagingData.from(listOf(dummyPhoto)))
+        )
+    }
 }
