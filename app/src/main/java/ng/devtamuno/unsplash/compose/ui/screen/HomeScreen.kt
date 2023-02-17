@@ -36,9 +36,10 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 import ng.devtamuno.unsplash.compose.R
 import ng.devtamuno.unsplash.compose.data.model.ui.Photo
-import ng.devtamuno.unsplash.compose.data.model.ui.PhotoUrls
 import ng.devtamuno.unsplash.compose.data.model.ui.dummyPhoto
 import ng.devtamuno.unsplash.compose.ui.components.*
+import ng.devtamuno.unsplash.compose.ui.dialog.DownloadImageAlertDialog
+import ng.devtamuno.unsplash.compose.ui.dialog.ImagePreviewDialog
 import ng.devtamuno.unsplash.compose.ui.event.HomeScreenEvent
 import ng.devtamuno.unsplash.compose.ui.state.HomeScreenState
 import ng.devtamuno.unsplash.compose.ui.theme.UnsplashAPIComposeTheme

@@ -1,4 +1,4 @@
-package ng.devtamuno.unsplash.compose.ui.screen
+package ng.devtamuno.unsplash.compose.ui.dialog
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.MutableTransitionState

@@ -1,4 +1,4 @@
-package ng.devtamuno.unsplash.compose.ui.screen
+package ng.devtamuno.unsplash.compose.ui.dialog
 
 
 import android.content.res.Configuration
@@ -10,7 +10,6 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
