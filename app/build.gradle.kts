@@ -3,7 +3,6 @@ plugins {
     androidLibrary
     kaptPlugin
     daggerHilt
-    navigationSafeArgsKotlin
     kotlinParcelize
 }
 
