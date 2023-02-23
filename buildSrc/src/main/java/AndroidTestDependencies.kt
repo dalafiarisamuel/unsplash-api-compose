@@ -1,10 +1,8 @@
 object AndroidTestDependencies {
     private const val androidxTestExt = "androidx.test.ext:junit-ktx:${Versions.androidxTestExt}"
     private const val espressoCore = "androidx.test.espresso:espresso-core:${Versions.espressoCore}"
-    private const val mockitoDexMaker =
-        "com.linkedin.dexmaker:dexmaker-mockito:${Versions.mockitoDexMaker}"
-    private const val googleTruth = "com.google.truth:truth:${Versions.googleTruth}"
-    private const val mockito = "org.mockito:mockito-core:${Versions.mockito}"
+    private const val mockK = "io.mockk:mockk:${Versions.mockK}"
+    private const val mockKJvm = "io.mockk:mockk-agent-jvm:${Versions.mockK}"
     private const val kotlinxCouroutine =
         "org.jetbrains.kotlinx:kotlinx-coroutines-test:${Versions.kotlinCoroutineVersion}"
     private const val androidXcore = "androidx.arch.core:core-testing:${Versions.androidXcore}"
@@ -14,6 +12,9 @@ object AndroidTestDependencies {
     private const val okHttpMockServer =
         "com.squareup.okhttp3:mockwebserver:${Versions.okHttpMockServer}"
     private const val jUnit = "androidx.test.ext:junit:1.1.3"
+    private const val kotestFramework = "io.kotest:kotest-runner-junit5:${Versions.kotestVersion}"
+    private const val kotestAssertions = "io.kotest:kotest-assertions-core:${Versions.kotestVersion}"
+    private const val kotestProperty = "io.kotest:kotest-property:${Versions.kotestVersion}"
 
     object Compose {
 
@@ -24,9 +25,11 @@ object AndroidTestDependencies {
         listOf(
             androidxTestExt,
             espressoCore,
-            mockitoDexMaker,
-            googleTruth,
-            mockito,
+            mockK,
+            mockKJvm,
+            kotestFramework,
+            kotestAssertions,
+            kotestProperty,
             kotlinxCouroutine,
             androidXcore,
             hiltTesting,

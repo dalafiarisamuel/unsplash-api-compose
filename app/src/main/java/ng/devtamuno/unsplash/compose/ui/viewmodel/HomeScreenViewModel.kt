@@ -1,19 +1,25 @@
 package ng.devtamuno.unsplash.compose.ui.viewmodel
 
 
-import androidx.lifecycle.*
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flatMapMerge
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.launchIn
 import ng.devtamuno.unsplash.compose.data.mapper.PhotoMapper
 import ng.devtamuno.unsplash.compose.data.repository.ImageRepository
 import ng.devtamuno.unsplash.compose.data.source.ImagePagingSource
 import ng.devtamuno.unsplash.compose.file.FileDownloader
-import javax.inject.Inject
-import kotlinx.coroutines.FlowPreview
 import ng.devtamuno.unsplash.compose.ui.event.HomeScreenEvent
 import ng.devtamuno.unsplash.compose.ui.state.HomeScreenState
 
@@ -27,7 +33,7 @@ class HomeScreenViewModel @Inject constructor(
 ) : MviViewModel<HomeScreenEvent, HomeScreenState>(HomeScreenState()) {
 
     companion object {
-        private const val CURRENT_QUERY = "current_query"
+        const val CURRENT_QUERY = "current_query"
         private val DEFAULT_QUERY = listOf("Corgi", "Comet", "AI", "Dreams")
     }
 
