@@ -3,7 +3,7 @@ buildscript {
 
     repositories {
         google()
-        jcenter()
+        mavenCentral()
     }
     dependencies {
         Build.classPaths.forEach { classpath(it) }
@@ -13,7 +13,7 @@ buildscript {
 allprojects {
     repositories {
         google()
-        jcenter()
+        mavenCentral()
         maven { setUrl("https://jitpack.io") }
     }
 }
