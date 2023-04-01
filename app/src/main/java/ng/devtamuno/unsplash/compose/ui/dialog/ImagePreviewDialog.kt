@@ -15,6 +15,9 @@ import androidx.compose.material.Card
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -28,6 +31,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import coil.compose.AsyncImagePainter
+import coil.compose.rememberAsyncImagePainter
 import coil.compose.rememberImagePainter
 import coil.request.ImageRequest
 import coil.request.ImageResult
@@ -68,20 +73,15 @@ private fun DialogContent(
     val imageColorParseComplementary = imageColorParsed.complementary()
     val isShowProgress = MutableTransitionState(true)
 
+    val painter = rememberAsyncImagePainter(imageUrl)
 
-    val imageRequestListener = object : ImageRequest.Listener {
-        override fun onSuccess(
-            request: ImageRequest,
-            metadata: ImageResult.Metadata
-        ) {
-            super.onSuccess(request, metadata)
-            isShowProgress.targetState = false
+    when (painter.state) {
+        is AsyncImagePainter.State.Loading,
+        is AsyncImagePainter.State.Empty -> { /*default state*/
         }
-
-        override fun onStart(request: ImageRequest) {
-            super.onStart(request)
-            isShowProgress.targetState = true
-
+        is AsyncImagePainter.State.Error,
+        is AsyncImagePainter.State.Success -> {
+            isShowProgress.targetState = false
         }
     }
 
@@ -99,10 +99,7 @@ private fun DialogContent(
             modifier = Modifier.fillMaxSize()
         ) {
             Image(
-                painter = rememberImagePainter(imageUrl) {
-                    //transformations(RoundedCornersTransformation(10f))
-                    listener(imageRequestListener)
-                },
+                painter = painter,
                 contentScale = ContentScale.Inside,
                 contentDescription = authorOrDescriptionText,
                 modifier = Modifier.wrapContentSize()
