@@ -19,7 +19,6 @@ import kotlinx.coroutines.flow.launchIn
 import ng.devtamuno.unsplash.compose.data.mapper.PhotoMapper
 import ng.devtamuno.unsplash.compose.data.repository.ImageRepository
 import ng.devtamuno.unsplash.compose.data.source.ImagePagingSource
-import ng.devtamuno.unsplash.compose.file.FileDownloader
 import ng.devtamuno.unsplash.compose.ui.event.HomeScreenEvent
 import ng.devtamuno.unsplash.compose.ui.state.HomeScreenState
 
@@ -28,13 +27,12 @@ import ng.devtamuno.unsplash.compose.ui.state.HomeScreenState
 class HomeScreenViewModel @Inject constructor(
     private val repository: ImageRepository,
     private val photoMapper: PhotoMapper,
-    private val fileDownloader: FileDownloader,
     state: SavedStateHandle
 ) : MviViewModel<HomeScreenEvent, HomeScreenState>(HomeScreenState()) {
 
     companion object {
         const val CURRENT_QUERY = "current_query"
-        private val DEFAULT_QUERY = listOf("Corgi", "Comet", "AI", "Dreams")
+        private val DEFAULT_QUERY = listOf("Nigeria", "Egypt", "Africa", "Dreams", "Husky")
     }
 
     private var currentQuery: MutableStateFlow<String>
@@ -48,17 +46,12 @@ class HomeScreenViewModel @Inject constructor(
         handleSearchEvent()
 
         handleSelectChipEvent()
-        handleDownloadSelectedImageEvent()
         handleUpdateSearchFieldEvent()
-
-        handleOpenDownloadImagePreviewDialogEvent()
-        handleDismissDownloadImagePreviewDialogEvent()
 
         handleOpenImagePreviewDialogEvent()
         handleDismissImagePreviewDialogEvent()
 
         handleOnImageClicked()
-        handleOnLongClicked()
     }
 
     private fun setSearchTerm(query: String) {
@@ -67,7 +60,7 @@ class HomeScreenViewModel @Inject constructor(
 
     private fun watchCurrentQueryField() {
         currentQuery
-            .debounce(800)
+            .debounce(1_000)
             .flatMapMerge<String, Unit> {
                 state = state.copy(searchFieldValue = it)
                 flowOf(Unit)
@@ -75,15 +68,14 @@ class HomeScreenViewModel @Inject constructor(
     }
 
     val photos = currentQuery
-        .debounce(800)
+        .debounce(1_000)
         .flatMapLatest { queryString ->
-            getImageSearchResult(queryString).cachedIn(viewModelScope)
-        }
+            getImageSearchResult(queryString)
+        }.cachedIn(viewModelScope)
 
     private fun getImageSearchResult(query: String) = Pager(
         config = PagingConfig(
-            pageSize = 25,
-            maxSize = 200,
+            pageSize = 20,
             enablePlaceholders = false
         ),
         pagingSourceFactory = {
@@ -94,15 +86,6 @@ class HomeScreenViewModel @Inject constructor(
             )
         }
     ).flow
-
-    private fun handleDownloadSelectedImageEvent() {
-        on<HomeScreenEvent.DownloadSelectedImage> {
-            val selectedImage = state.selectedImage
-            if (selectedImage != null) {
-                fileDownloader.downloadImageFileToDownloadFolder(selectedImage.urls.full)
-            }
-        }
-    }
 
     private fun handleSelectChipEvent() {
         on<HomeScreenEvent.SelectChip> {
@@ -146,18 +129,6 @@ class HomeScreenViewModel @Inject constructor(
         }
     }
 
-    private fun handleOpenDownloadImagePreviewDialogEvent() {
-        on<HomeScreenEvent.DownloadImageDialog.Open> {
-            state = state.copy(isDownloadImageDialogVisible = true)
-        }
-    }
-
-    private fun handleDismissDownloadImagePreviewDialogEvent() {
-        on<HomeScreenEvent.DownloadImageDialog.Dismiss> {
-            state = state.copy(isDownloadImageDialogVisible = false)
-        }
-    }
-
     private fun handleOnImageClicked() {
         on<HomeScreenEvent.OnImageClicked> {
             state = state.copy(
@@ -167,12 +138,4 @@ class HomeScreenViewModel @Inject constructor(
         }
     }
 
-    private fun handleOnLongClicked() {
-        on<HomeScreenEvent.OnImageLongClicked> {
-            state = state.copy(
-                selectedImage = it.image,
-                isDownloadImageDialogVisible = true
-            )
-        }
-    }
 }

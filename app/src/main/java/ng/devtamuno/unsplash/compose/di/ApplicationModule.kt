@@ -51,7 +51,7 @@ object ApplicationModule {
         okHttpBuilder.addInterceptor { chain: Interceptor.Chain ->
             val request = chain.request()
             val newRequest = request.newBuilder()
-                .header("Authorization", " Client-ID ${Env.API_KEY}")
+                .header("Authorization", "Client-ID ${Env.API_KEY}")
             chain.proceed(newRequest.build())
         }
         return okHttpBuilder.build()

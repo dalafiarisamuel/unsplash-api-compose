@@ -1,17 +1,13 @@
 package ng.devtamuno.unsplash.compose.ui.screen
 
-import android.Manifest
-import android.content.pm.PackageManager
 import android.content.res.Configuration
-import android.widget.Toast
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -19,7 +15,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
@@ -27,9 +22,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.content.ContextCompat
 import androidx.paging.PagingData
-import androidx.paging.compose.collectAsLazyPagingItems
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
@@ -38,7 +31,6 @@ import ng.devtamuno.unsplash.compose.R
 import ng.devtamuno.unsplash.compose.data.model.ui.Photo
 import ng.devtamuno.unsplash.compose.data.model.ui.dummyPhoto
 import ng.devtamuno.unsplash.compose.ui.components.*
-import ng.devtamuno.unsplash.compose.ui.dialog.DownloadImageAlertDialog
 import ng.devtamuno.unsplash.compose.ui.dialog.ImagePreviewDialog
 import ng.devtamuno.unsplash.compose.ui.event.HomeScreenEvent
 import ng.devtamuno.unsplash.compose.ui.state.HomeScreenState
@@ -51,13 +43,12 @@ import ng.devtamuno.unsplash.compose.ui.theme.appWhite
 fun HomeScreen(
     state: HomeScreenState = HomeScreenState(),
     imageList: Flow<PagingData<Photo>> = flowOf(PagingData.empty()),
-    dispatch: (HomeScreenEvent) -> Unit = {}
+    onLongClicked: (Photo) -> Unit = {},
+    dispatch: (HomeScreenEvent) -> Unit = {},
 ) {
 
-    val listScrollState = rememberLazyGridState()
+    val lazyGridState = rememberLazyStaggeredGridState()
     val coroutine = rememberCoroutineScope()
-    val context = LocalContext.current
-
     val toolbarHeight = 105.dp
     val toolbarHeightPx = with(LocalDensity.current) { toolbarHeight.roundToPx().toFloat() }
     var toolbarOffsetHeightPx by remember { mutableStateOf(0f) }
@@ -75,18 +66,11 @@ fun HomeScreen(
             }
         }
     }
-    val launcher = rememberLauncherForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) { isGranted: Boolean ->
-        if (isGranted) {
-            dispatch(HomeScreenEvent.ImagePreviewDialog.Open)
-        }
-    }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(start = 21.dp, end = 21.dp)
+            .padding(horizontal = 15.dp)
     ) {
 
         Spacer(modifier = Modifier.padding(top = 20.dp))
@@ -104,7 +88,7 @@ fun HomeScreen(
             toolbarHeight = toolbarHeight,
             keyboardAction = {
                 coroutine.launch(Dispatchers.Main) {
-                    listScrollState.scrollToItem(0)
+                    lazyGridState.scrollToItem(0)
                 }
                 dispatch(HomeScreenEvent.Search)
             },
@@ -119,30 +103,21 @@ fun HomeScreen(
             selectedText = state.searchFieldValue,
         ) {
             coroutine.launch(Dispatchers.Main) {
-                listScrollState.scrollToItem(0)
+                lazyGridState.scrollToItem(0)
             }
             dispatch(HomeScreenEvent.SelectChip(it))
         }
 
         UnsplashImageList(
             modifier = Modifier.fillMaxSize(),
-            imageList = imageList.collectAsLazyPagingItems(),
-            lazyListState = listScrollState,
+            imageList = imageList,
+            lazyGridState = lazyGridState,
             nestedScrollConnection = nestedScrollConnection,
             onItemClicked = {
                 dispatch(HomeScreenEvent.OnImageClicked(it))
             },
             onItemLongClicked = {
-                when (PackageManager.PERMISSION_GRANTED) {
-                    ContextCompat.checkSelfPermission(
-                        context, Manifest.permission.WRITE_EXTERNAL_STORAGE
-                    ) -> {
-                        dispatch(HomeScreenEvent.OnImageLongClicked(it))
-                    }
-                    else -> {
-                        launcher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    }
-                }
+                it?.let { onLongClicked(it) }
             }
         )
 
@@ -152,20 +127,6 @@ fun HomeScreen(
             ) {
                 dispatch(HomeScreenEvent.ImagePreviewDialog.Dismiss)
             }
-        }
-
-        if (state.isDownloadImageDialogVisible) {
-            DownloadImageAlertDialog(
-                onDismissClicked = {
-                    dispatch(HomeScreenEvent.DownloadImageDialog.Dismiss)
-                },
-                onConfirmedClicked = {
-                    dispatch(HomeScreenEvent.DownloadImageDialog.Dismiss)
-                    dispatch(HomeScreenEvent.DownloadSelectedImage)
-                    Toast.makeText(context, R.string.download_has_started, Toast.LENGTH_SHORT)
-                        .show()
-                }
-            )
         }
     }
 

@@ -1,36 +1,9 @@
 <resources>
     <string name="app_name">Unsplash API Compose</string>
-    <string name="credit_card_information">Card\nInformation</string>
-    <string name="credit_card_number">Card Number</string>
-    <string name="get_information">Get Information</string>
-    <string name="about_card">About Card</string>
-    <string name="card_scheme">Card Scheme</string>
-    <string name="card_type">Card Type</string>
-    <string name="card_level">Card Level</string>
-    <string name="country">Country</string>
-    <string name="card_bank">Bank</string>
-    <string name="processing">Processing…</string>
-    <string name="no_bin_number_was_found">No BIN number was found.</string>
-    <string name="no_internet_connection">No Internet connection</string>
-    <string name="currency">Currency</string>
-    <string name="phone">Phone</string>
-    <string name="no_cards_added_yet">No Cards saved yet</string>
-    <string name="recently_viewed_cards">Recently\nViewed Cards</string>
-    <string name="no_internet">There\'s currently no internet connection</string>
-    <string name="offline_card_result_notification_text">We\'ve found a result for your offline capture. BIN(%s).</string>
-    <string name="view_detail">View Detail</string>
-    <string name="offline_scan_result">Offline Scan Result</string>
     <string name="searched_term_not_found">Searched term not found</string>
     <string name="unsplash_images">Unsplash Images</string>
     <string name="search_images">Search Images</string>
     <string name="search_image_hint">Type a term, e.g dog</string>
-    <string name="nothing_to_display">Nothing to display…</string>
-    <string name="results_could_not_be_loaded">Results could not be loaded</string>
-    <string name="retry">Retry</string>
-    <string name="default_search">Default Search</string>
-    <string name="ui">UI</string>
-    <string name="dark_mode">Dark Mode</string>
-    <string name="dark_mode_def_value">1</string>
     <string name="nature">Nature</string>
     <string name="fashion">Fashion</string>
     <string name="people">People</string>
@@ -73,4 +46,19 @@
     <string name="dismiss">Dismiss</string>
     <string name="download_image">Download Image</string>
     <string name="are_you_sure_you_want_to_download_this_image">Are you sure you want to download this image?</string>
+    <string name="photo_detail">Photo Detail</string>
+    <string name="an_unknown_error_occurred">An unknown error was encountered. please try again!</string>
+    <string name="description">Description</string>
+    <plurals name="collection_plural">
+        <item quantity="one">%d Collection</item>
+        <item quantity="other">%d Collections</item>
+    </plurals>
+    <plurals name="like_plural">
+        <item quantity="one">%d Like</item>
+        <item quantity="other">%d Likes</item>
+    </plurals>
+    <plurals name="photo_plural">
+        <item quantity="one">%d Photo</item>
+        <item quantity="other">%d Photos</item>
+    </plurals>
 </resources>

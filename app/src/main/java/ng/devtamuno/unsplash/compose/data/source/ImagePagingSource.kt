@@ -16,8 +16,8 @@ class ImagePagingSource(
     private val photoMapper: PhotoMapper,
     private val query: String
 ) : PagingSource<Int, Photo>() {
-    override fun getRefreshKey(state: PagingState<Int, Photo>): Int? {
-        return state.anchorPosition
+    override fun getRefreshKey(state: PagingState<Int, Photo>): Int {
+        return STARTING_PAGE_INDEX
     }
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Photo> {
@@ -30,7 +30,7 @@ class ImagePagingSource(
             LoadResult.Page(
                 data = photos,
                 prevKey = if (position == STARTING_PAGE_INDEX) null else position - 1,
-                nextKey = if (photos.isEmpty()) null else position + 1
+                nextKey = if (position >= response.totalPages) null else position + 1
             )
         } catch (exception: IOException) {
             LoadResult.Error(exception)

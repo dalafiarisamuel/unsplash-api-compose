@@ -1,5 +1,6 @@
 package ng.devtamuno.unsplash.compose.data.dummy
 
+import ng.devtamuno.unsplash.compose.data.model.remote.ProfileImage
 import ng.devtamuno.unsplash.compose.data.model.remote.UnsplashPhotoRemote
 import ng.devtamuno.unsplash.compose.data.model.remote.UnsplashPhotoUrls
 import ng.devtamuno.unsplash.compose.data.model.remote.UnsplashResponseRemote
@@ -15,6 +16,8 @@ object RemoteData {
         description = "Old stone background texture",
         height = 3238,
         width = 4857,
+        likes = 200,
+        createdAt = "2016-05-03T11:00:28-04:00",
         urls = UnsplashPhotoUrls(
             raw = "https://images.unsplash.com/photo-1606707764561-ed73aab9fdd5",
             full = "https://images.unsplash.com/photo-1606707764561-ed73aab9fdd5",
@@ -23,8 +26,14 @@ object RemoteData {
             thumb = "https://images.unsplash.com/photo-1606707764561-ed73aab9fdd5"
         ),
         user = UnsplashUser(
+            id = "pXhwzz1JtQU",
             name = "Rich Wooten",
             username = "whatsawoot",
+            profileImage = ProfileImage(
+                small = "https://images.unsplash.com/photo-1606707764561-ed73aab9fdd5",
+                medium = "https://images.unsplash.com/photo-1606707764561-ed73aab9fdd5",
+                large = "https://images.unsplash.com/photo-1606707764561-ed73aab9fdd5",
+            )
         )
     )
 

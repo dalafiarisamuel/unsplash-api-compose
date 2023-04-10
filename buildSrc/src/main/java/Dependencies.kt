@@ -50,6 +50,8 @@ object Dependencies {
         private const val composeViewModel = "androidx.lifecycle:lifecycle-viewmodel-compose:2.4.1"
         private const val coilCompose = "io.coil-kt:coil-compose:2.2.2"
         private const val composeNavigation = "androidx.navigation:navigation-compose:2.4.0"
+        private const val composehiltNavigation = "androidx.hilt:hilt-navigation-compose:1.1.0-alpha01"
+        private const val composeLifecyleExtension = "androidx.lifecycle:lifecycle-runtime-compose:2.6.1"
 
         val implementations = listOf(
             composeUi,
@@ -59,7 +61,9 @@ object Dependencies {
             composeActivity,
             composeViewModel,
             coilCompose,
-            composeNavigation
+            composeNavigation,
+            composehiltNavigation,
+            composeLifecyleExtension,
         )
 
     }

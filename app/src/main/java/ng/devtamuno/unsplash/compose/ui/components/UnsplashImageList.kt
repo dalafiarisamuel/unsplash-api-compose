@@ -14,16 +14,17 @@ import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyGridItemScope
-import androidx.compose.foundation.lazy.grid.LazyGridScope
-import androidx.compose.foundation.lazy.grid.LazyGridState
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridItemScope
+import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridScope
+import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState
+import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
@@ -47,9 +48,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.paging.LoadState
+import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
+import kotlinx.coroutines.flow.Flow
 import ng.devtamuno.unsplash.compose.R
 import ng.devtamuno.unsplash.compose.data.model.ui.Photo
 import ng.devtamuno.unsplash.compose.ui.theme.appWhite
@@ -61,19 +65,16 @@ import ng.devtamuno.unsplash.compose.ui.theme.complementary
 @Composable
 fun UnsplashImageList(
     modifier: Modifier,
-    imageList: LazyPagingItems<Photo>,
-    lazyListState: LazyGridState,
+    imageList: Flow<PagingData<Photo>>,
+    lazyGridState: LazyStaggeredGridState,
     nestedScrollConnection: NestedScrollConnection,
     onItemClicked: (Photo?) -> Unit,
-    onItemLongClicked: (Photo?) -> Unit
+    onItemLongClicked: (Photo?) -> Unit,
 ) {
-
-    val isListEmpty by remember { derivedStateOf { imageList.itemCount <= 0 } }
-
-    if (imageList.loadState.refresh is LoadState.Loading) {
-        LoadingView(
-            modifier = Modifier.fillMaxSize()
-        )
+    val list = imageList.collectAsLazyPagingItems()
+    val isListEmpty by remember { derivedStateOf { list.itemCount <= 0 } }
+    if (list.loadState.refresh is LoadState.Loading) {
+        LoadingView(modifier = Modifier.fillMaxSize())
     } else {
         Crossfade(targetState = isListEmpty) {
             if (it) {
@@ -81,8 +82,8 @@ fun UnsplashImageList(
             } else {
                 PhotosList(
                     modifier = modifier,
-                    imageList = imageList,
-                    lazyListState = lazyListState,
+                    imageList = list,
+                    lazyGridState = lazyGridState,
                     nestedScrollConnection = nestedScrollConnection,
                     onItemClicked = onItemClicked,
                     onItemLongClicked = onItemLongClicked,
@@ -97,30 +98,30 @@ fun UnsplashImageList(
 private fun PhotosList(
     modifier: Modifier,
     imageList: LazyPagingItems<Photo>,
-    lazyListState: LazyGridState,
+    lazyGridState: LazyStaggeredGridState,
     nestedScrollConnection: NestedScrollConnection,
     onItemClicked: (Photo?) -> Unit,
-    onItemLongClicked: (Photo?) -> Unit
+    onItemLongClicked: (Photo?) -> Unit,
 ) {
-    LazyVerticalGrid(
-        state = lazyListState,
+    LazyVerticalStaggeredGrid(
+        state = lazyGridState,
         verticalArrangement = Arrangement.spacedBy(8.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         modifier = Modifier
             .padding(top = 15.dp)
             .nestedScroll(nestedScrollConnection)
             .then(modifier),
-        columns = GridCells.Fixed(2),
-        content = {
-            items(imageList) { photo ->
-                UnsplashImage(
-                    modifier = Modifier.animateItemPlacement(),
-                    data = photo,
-                    onImageClicked = onItemClicked,
-                    onImageLongClicked = onItemLongClicked
-                )
-            }
-        })
+        columns = StaggeredGridCells.Fixed(2)
+    ) {
+        lazyItems(imageList) { photo ->
+            UnsplashImageStaggered(
+                modifier = Modifier,
+                data = photo,
+                onImageClicked = onItemClicked,
+                onImageLongClicked = onItemLongClicked
+            )
+        }
+    }
 }
 
 @Preview(name = "Dark", uiMode = Configuration.UI_MODE_NIGHT_YES)
@@ -128,7 +129,7 @@ private fun PhotosList(
 @Composable
 fun EmptyListStateComponent(
     modifier: Modifier = Modifier,
-    term: String = stringResource(id = R.string.searched_term_not_found)
+    term: String = stringResource(id = R.string.searched_term_not_found),
 ) {
 
     Column(
@@ -160,24 +161,25 @@ fun EmptyListStateComponent(
 
 @ExperimentalFoundationApi
 @Composable
-private fun UnsplashImage(
+private fun UnsplashImageStaggered(
     modifier: Modifier,
     data: Photo?,
     onImageClicked: (Photo?) -> Unit,
-    onImageLongClicked: (Photo?) -> Unit
+    onImageLongClicked: (Photo?) -> Unit,
 ) {
 
     val imageColorParsed = (data?.color?.color ?: Color(0xFF212121))
     val imageColorParseComplementary = imageColorParsed.complementary()
     val isShowProgress by remember { mutableStateOf(MutableTransitionState(true)) }
     val painter = rememberAsyncImagePainter(data?.urls?.small)
+    val aspectRatio: Float by remember {
+        derivedStateOf { (data?.width?.toFloat() ?: 1.0F) / (data?.height?.toFloat() ?: 1.0F) }
+    }
 
     when (painter.state) {
-        is AsyncImagePainter.State.Loading,
-        is AsyncImagePainter.State.Empty -> { /*default state*/
+        is AsyncImagePainter.State.Loading, is AsyncImagePainter.State.Empty -> { /*default state*/
         }
-        is AsyncImagePainter.State.Error,
-        is AsyncImagePainter.State.Success -> {
+        is AsyncImagePainter.State.Error, is AsyncImagePainter.State.Success -> {
             isShowProgress.targetState = false
         }
     }
@@ -195,17 +197,18 @@ private fun UnsplashImage(
                 .fillMaxWidth()
                 .combinedClickable(
                     onClick = { onImageClicked(data) },
-                    onLongClick = { onImageLongClicked(data) }
+                    onLongClick = { onImageLongClicked(data) },
                 )
 
         ) {
             Image(
                 painter = painter,
-                contentScale = ContentScale.Crop,
+                contentScale = ContentScale.Fit,
                 contentDescription = data?.description,
                 modifier = Modifier
+                    .aspectRatio(aspectRatio)
                     .fillMaxWidth()
-                    .height(200.dp)
+                    .defaultMinSize(minHeight = 200.dp)
             )
         }
 
@@ -215,17 +218,22 @@ private fun UnsplashImage(
             enter = fadeIn(initialAlpha = 0.4f),
             exit = fadeOut(tween(durationMillis = 250))
 
-        ) { CircularProgressIndicator(color = imageColorParseComplementary) }
+        ) {
+            CircularProgressIndicator(
+                strokeWidth = 2.dp,
+                color = imageColorParseComplementary,
+                modifier = Modifier.size(30.dp)
+            )
+        }
 
     }
 
 }
 
-
 @ExperimentalFoundationApi
-private fun <T : Any> LazyGridScope.items(
+private fun <T : Any> LazyStaggeredGridScope.lazyItems(
     lazyPagingItems: LazyPagingItems<T>,
-    itemContent: @Composable LazyGridItemScope.(value: T?) -> Unit
+    itemContent: @Composable LazyStaggeredGridItemScope.(value: T?) -> Unit,
 ) {
     items(lazyPagingItems.itemCount) { index ->
         itemContent(lazyPagingItems[index])

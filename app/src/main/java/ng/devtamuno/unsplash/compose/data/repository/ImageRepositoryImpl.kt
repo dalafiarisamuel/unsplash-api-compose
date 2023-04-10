@@ -1,5 +1,6 @@
 package ng.devtamuno.unsplash.compose.data.repository
 
+import ng.devtamuno.unsplash.compose.data.model.remote.UnsplashPhotoRemote
 import ng.devtamuno.unsplash.compose.data.model.remote.UnsplashResponseRemote
 import ng.devtamuno.unsplash.compose.networking.ApiInterface
 
@@ -11,5 +12,8 @@ internal class ImageRepositoryImpl(private val api: ApiInterface) : ImageReposit
         loadSize: Int
     ): UnsplashResponseRemote {
         return api.searchPhotos(query, page, loadSize)
+    }
+    override suspend fun getPhoto(photoId: String): Resource<UnsplashPhotoRemote> {
+        return resourceHelper { api.getPhoto(photoId) }
     }
 }

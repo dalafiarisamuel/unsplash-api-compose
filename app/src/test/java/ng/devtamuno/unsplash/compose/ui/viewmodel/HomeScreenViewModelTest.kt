@@ -7,7 +7,6 @@ import io.kotest.core.spec.style.FeatureSpec
 import io.kotest.core.test.testCoroutineScheduler
 import io.kotest.matchers.booleans.shouldBeFalse
 import io.kotest.matchers.booleans.shouldBeTrue
-import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldBeEmpty
@@ -16,7 +15,6 @@ import io.mockk.clearAllMocks
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
-import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
@@ -29,7 +27,6 @@ import ng.devtamuno.unsplash.compose.data.mapper.PhotoCreatorMapper
 import ng.devtamuno.unsplash.compose.data.mapper.PhotoMapper
 import ng.devtamuno.unsplash.compose.data.mapper.PhotosUrlsMapper
 import ng.devtamuno.unsplash.compose.data.repository.ImageRepository
-import ng.devtamuno.unsplash.compose.file.FileDownloader
 import ng.devtamuno.unsplash.compose.ui.event.HomeScreenEvent
 
 @OptIn(
@@ -39,7 +36,7 @@ import ng.devtamuno.unsplash.compose.ui.event.HomeScreenEvent
 )
 class HomeScreenViewModelTest : FeatureSpec({
 
-    val disptacher =
+    val dispatcher =
         StandardTestDispatcher(scheduler = TestCoroutineScheduler())
 
     val photoMapper = PhotoMapper(
@@ -48,7 +45,6 @@ class HomeScreenViewModelTest : FeatureSpec({
     )
 
     val imageRepository: ImageRepository = mockk()
-    val fileDownloader: FileDownloader = mockk()
     val savedInstanceState: SavedStateHandle = mockk()
 
     val singlePhoto = photoMapper.mapToUI(RemoteData.remotePhoto)
@@ -56,7 +52,7 @@ class HomeScreenViewModelTest : FeatureSpec({
     var viewModel: HomeScreenViewModel
 
     beforeTest {
-        Dispatchers.setMain(disptacher)
+        Dispatchers.setMain(dispatcher)
 
         every {
             savedInstanceState.get<String>(HomeScreenViewModel.CURRENT_QUERY)
@@ -83,7 +79,6 @@ class HomeScreenViewModelTest : FeatureSpec({
             viewModel = HomeScreenViewModel(
                 repository = imageRepository,
                 photoMapper = photoMapper,
-                fileDownloader = fileDownloader,
                 state = savedInstanceState
             )
 
@@ -92,7 +87,7 @@ class HomeScreenViewModelTest : FeatureSpec({
                 viewModel.state.searchFieldValue.shouldBeEmpty()
             }
 
-            disptacher.testCoroutineScheduler.advanceTimeBy(900)
+            dispatcher.testCoroutineScheduler.advanceTimeBy(1_000)
 
             withClue("View Model state.searchField should not be empty") {
                 viewModel.state.searchFieldValue.shouldNotBeEmpty()
@@ -113,14 +108,13 @@ class HomeScreenViewModelTest : FeatureSpec({
             viewModel = HomeScreenViewModel(
                 repository = imageRepository,
                 photoMapper = photoMapper,
-                fileDownloader = fileDownloader,
                 state = savedInstanceState
             )
 
             //when event is dispatched
             viewModel.dispatch(HomeScreenEvent.UpdateSearchField(searchTerm = "cat"))
 
-            disptacher.testCoroutineScheduler.advanceTimeBy(900)
+            dispatcher.testCoroutineScheduler.advanceTimeBy(900)
 
             withClue("state.searchField should be updated to search term") {
                 viewModel.state.searchFieldValue.shouldBe("cat")
@@ -133,14 +127,13 @@ class HomeScreenViewModelTest : FeatureSpec({
             viewModel = HomeScreenViewModel(
                 repository = imageRepository,
                 photoMapper = photoMapper,
-                fileDownloader = fileDownloader,
                 state = savedInstanceState
             )
 
             //when event is dispatched
             viewModel.dispatch(HomeScreenEvent.SelectChip(chipValue = "france"))
 
-            disptacher.testCoroutineScheduler.advanceTimeBy(900)
+            dispatcher.testCoroutineScheduler.advanceTimeBy(900)
 
             withClue("state.searchField should be updated to search term") {
                 viewModel.state.searchFieldValue.shouldBe("france")
@@ -153,14 +146,13 @@ class HomeScreenViewModelTest : FeatureSpec({
             viewModel = HomeScreenViewModel(
                 repository = imageRepository,
                 photoMapper = photoMapper,
-                fileDownloader = fileDownloader,
                 state = savedInstanceState
             )
 
             //when event is dispatched
             viewModel.dispatch(HomeScreenEvent.SelectImage(image = singlePhoto))
 
-            disptacher.testCoroutineScheduler.advanceTimeBy(900)
+            dispatcher.testCoroutineScheduler.advanceTimeBy(900)
 
             withClue("state.selectedImage should be updated to selected image") {
                 viewModel.state.selectedImage.shouldBe(singlePhoto)
@@ -173,14 +165,13 @@ class HomeScreenViewModelTest : FeatureSpec({
             viewModel = HomeScreenViewModel(
                 repository = imageRepository,
                 photoMapper = photoMapper,
-                fileDownloader = fileDownloader,
                 state = savedInstanceState
             )
 
             //when event is dispatched
             viewModel.dispatch(HomeScreenEvent.OnImageClicked(image = singlePhoto))
 
-            disptacher.testCoroutineScheduler.advanceTimeBy(900)
+            dispatcher.testCoroutineScheduler.advanceTimeBy(900)
 
             withClue("state.selectedImage should be updated to selected image") {
                 viewModel.state.selectedImage.shouldBe(singlePhoto)
@@ -193,89 +184,11 @@ class HomeScreenViewModelTest : FeatureSpec({
 
         }
 
-        scenario("When HomeScreenEvent.OnImageLongClicked is dispatched") {
-
-            viewModel = HomeScreenViewModel(
-                repository = imageRepository,
-                photoMapper = photoMapper,
-                fileDownloader = fileDownloader,
-                state = savedInstanceState
-            )
-
-            //when event is dispatched
-            viewModel.dispatch(HomeScreenEvent.OnImageLongClicked(image = singlePhoto))
-
-            disptacher.testCoroutineScheduler.advanceTimeBy(900)
-
-            withClue("state.selectedImage should be updated to selected image") {
-                viewModel.state.selectedImage.shouldBe(singlePhoto)
-            }
-
-            withClue("state.isDownloadImageDialogVisible should be true") {
-                viewModel.state.isDownloadImageDialogVisible.shouldBeTrue()
-            }
-
-        }
-
-        scenario("When HomeScreenEvent.DownloadSelectedImage is dispatched and image selected") {
-
-            viewModel = HomeScreenViewModel(
-                repository = imageRepository,
-                photoMapper = photoMapper,
-                fileDownloader = fileDownloader,
-                state = savedInstanceState
-            )
-
-            //when event is dispatched
-            viewModel.dispatch(HomeScreenEvent.SelectImage(image = singlePhoto))
-
-            disptacher.testCoroutineScheduler.advanceTimeBy(900)
-
-            withClue("state.selectedImage should be updated to selected image") {
-                viewModel.state.selectedImage.shouldBe(singlePhoto)
-            }
-
-            //when download event is dispatched
-            viewModel.dispatch(HomeScreenEvent.DownloadSelectedImage)
-
-            disptacher.testCoroutineScheduler.advanceTimeBy(900)
-
-            withClue("fileDownloader method should be called") {
-                verify(atMost = 1) { fileDownloader.downloadImageFileToDownloadFolder(singlePhoto.urls.full) }
-            }
-
-        }
-
-        scenario("When HomeScreenEvent.DownloadSelectedImage is dispatched and image not selected") {
-
-            viewModel = HomeScreenViewModel(
-                repository = imageRepository,
-                photoMapper = photoMapper,
-                fileDownloader = fileDownloader,
-                state = savedInstanceState
-            )
-
-            withClue("state.selectedImage should be null") {
-                viewModel.state.selectedImage.shouldBeNull()
-            }
-
-            //when download event is dispatched
-            viewModel.dispatch(HomeScreenEvent.DownloadSelectedImage)
-
-            disptacher.testCoroutineScheduler.advanceTimeBy(900)
-
-            withClue("fileDownloader method should not be called") {
-                verify(exactly = 0) { fileDownloader.downloadImageFileToDownloadFolder(any()) }
-            }
-
-        }
-
         scenario("When HomeScreenEvent.ImagePreviewDialog.Open is dispatched") {
 
             viewModel = HomeScreenViewModel(
                 repository = imageRepository,
                 photoMapper = photoMapper,
-                fileDownloader = fileDownloader,
                 state = savedInstanceState
             )
 
@@ -285,7 +198,7 @@ class HomeScreenViewModelTest : FeatureSpec({
 
             viewModel.dispatch(HomeScreenEvent.ImagePreviewDialog.Open)
 
-            disptacher.testCoroutineScheduler.advanceTimeBy(900)
+            dispatcher.testCoroutineScheduler.advanceTimeBy(900)
 
             withClue("state.isImagePreviewDialogVisible should be true") {
                 viewModel.state.isImagePreviewDialogVisible.shouldBeTrue()
@@ -298,13 +211,12 @@ class HomeScreenViewModelTest : FeatureSpec({
             viewModel = HomeScreenViewModel(
                 repository = imageRepository,
                 photoMapper = photoMapper,
-                fileDownloader = fileDownloader,
                 state = savedInstanceState
             )
 
             viewModel.dispatch(HomeScreenEvent.ImagePreviewDialog.Open)
 
-            disptacher.testCoroutineScheduler.advanceTimeBy(900)
+            dispatcher.testCoroutineScheduler.advanceTimeBy(900)
 
             withClue("state.isImagePreviewDialogVisible should be true") {
                 viewModel.state.isImagePreviewDialogVisible.shouldBeTrue()
@@ -312,60 +224,10 @@ class HomeScreenViewModelTest : FeatureSpec({
 
             viewModel.dispatch(HomeScreenEvent.ImagePreviewDialog.Dismiss)
 
-            disptacher.testCoroutineScheduler.advanceTimeBy(900)
+            dispatcher.testCoroutineScheduler.advanceTimeBy(900)
 
             withClue("state.isImagePreviewDialogVisible should be false") {
                 viewModel.state.isImagePreviewDialogVisible.shouldBeFalse()
-            }
-
-        }
-
-        scenario("When HomeScreenEvent.DownloadImageDialog.Open is dispatched") {
-
-            viewModel = HomeScreenViewModel(
-                repository = imageRepository,
-                photoMapper = photoMapper,
-                fileDownloader = fileDownloader,
-                state = savedInstanceState
-            )
-
-            withClue("state.isDownloadImageDialogVisible should be false") {
-                viewModel.state.isDownloadImageDialogVisible.shouldBeFalse()
-            }
-
-            viewModel.dispatch(HomeScreenEvent.DownloadImageDialog.Open)
-
-            disptacher.testCoroutineScheduler.advanceTimeBy(900)
-
-            withClue("state.isDownloadImageDialogVisible should be true") {
-                viewModel.state.isDownloadImageDialogVisible.shouldBeTrue()
-            }
-
-        }
-
-        scenario("When HomeScreenEvent.DownloadImageDialog.Dismiss is dispatched") {
-
-            viewModel = HomeScreenViewModel(
-                repository = imageRepository,
-                photoMapper = photoMapper,
-                fileDownloader = fileDownloader,
-                state = savedInstanceState
-            )
-
-            viewModel.dispatch(HomeScreenEvent.DownloadImageDialog.Open)
-
-            disptacher.testCoroutineScheduler.advanceTimeBy(900)
-
-            withClue("state.isDownloadImageDialogVisible should be true") {
-                viewModel.state.isDownloadImageDialogVisible.shouldBeTrue()
-            }
-
-            viewModel.dispatch(HomeScreenEvent.DownloadImageDialog.Dismiss)
-
-            disptacher.testCoroutineScheduler.advanceTimeBy(900)
-
-            withClue("state.isDownloadImageDialogVisible should be false") {
-                viewModel.state.isDownloadImageDialogVisible.shouldBeFalse()
             }
 
         }

@@ -10,9 +10,8 @@ sealed class HomeScreenEvent {
 
     data class OnImageClicked(val image: Photo?) : HomeScreenEvent()
 
-    data class OnImageLongClicked(val image: Photo?) : HomeScreenEvent()
-
     data class UpdateSearchField(val searchTerm: String) : HomeScreenEvent()
+    data class UpdateCollapsibleToolBarVisibility(val isContentVisible: Boolean) : HomeScreenEvent()
 
     sealed class ImagePreviewDialog : HomeScreenEvent() {
 
@@ -21,15 +20,6 @@ sealed class HomeScreenEvent {
         object Open : ImagePreviewDialog()
     }
 
-    sealed class DownloadImageDialog : HomeScreenEvent() {
-
-        object Dismiss : DownloadImageDialog()
-
-        object Open : DownloadImageDialog()
-    }
-
     object Search : HomeScreenEvent()
-
-    object DownloadSelectedImage : HomeScreenEvent()
 
 }
