@@ -87,7 +87,7 @@ class HomeScreenViewModelTest : FeatureSpec({
                 viewModel.state.searchFieldValue.shouldBeEmpty()
             }
 
-            dispatcher.testCoroutineScheduler.advanceTimeBy(1_000)
+            dispatcher.testCoroutineScheduler.advanceTimeBy(1_100)
 
             withClue("View Model state.searchField should not be empty") {
                 viewModel.state.searchFieldValue.shouldNotBeEmpty()

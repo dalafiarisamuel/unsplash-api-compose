@@ -29,6 +29,11 @@ object RemoteData {
             id = "pXhwzz1JtQU",
             name = "Rich Wooten",
             username = "whatsawoot",
+            bio = null,
+            totalCollections = 12,
+            totalLikes = 437,
+            totalPhotos = 5000,
+            portfolioUrl = "https://this-is-a-fake-url",
             profileImage = ProfileImage(
                 small = "https://images.unsplash.com/photo-1606707764561-ed73aab9fdd5",
                 medium = "https://images.unsplash.com/photo-1606707764561-ed73aab9fdd5",
@@ -37,5 +42,9 @@ object RemoteData {
         )
     )
 
-    val remoteResponse = UnsplashResponseRemote(listOf(remotePhoto, remotePhoto, remotePhoto))
+    val remoteResponse = UnsplashResponseRemote(
+        totalPages = 1,
+        total = 3,
+        results = listOf(remotePhoto, remotePhoto, remotePhoto)
+    )
 }
