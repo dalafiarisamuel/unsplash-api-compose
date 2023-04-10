@@ -106,9 +106,8 @@ fun PhotoDetailScreen(
 
             else -> {
 
-                Spacer(modifier = Modifier.padding(top = 10.dp))
-
                 if (state.photo != null) {
+                    Spacer(modifier = Modifier.padding(top = 10.dp))
                     ArtistCard(unsplashUser = state.photo.user)
                 }
 
