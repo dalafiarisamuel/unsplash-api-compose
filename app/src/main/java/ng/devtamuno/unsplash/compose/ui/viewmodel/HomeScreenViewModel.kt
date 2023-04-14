@@ -21,6 +21,7 @@ import ng.devtamuno.unsplash.compose.data.repository.ImageRepository
 import ng.devtamuno.unsplash.compose.data.source.ImagePagingSource
 import ng.devtamuno.unsplash.compose.ui.event.HomeScreenEvent
 import ng.devtamuno.unsplash.compose.ui.state.HomeScreenState
+import kotlin.time.Duration.Companion.seconds
 
 @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
 @HiltViewModel
@@ -60,7 +61,7 @@ class HomeScreenViewModel @Inject constructor(
 
     private fun watchCurrentQueryField() {
         currentQuery
-            .debounce(1_000)
+            .debounce(1.seconds)
             .flatMapMerge<String, Unit> {
                 state = state.copy(searchFieldValue = it)
                 flowOf(Unit)
@@ -68,7 +69,7 @@ class HomeScreenViewModel @Inject constructor(
     }
 
     val photos = currentQuery
-        .debounce(1_000)
+        .debounce(1.seconds)
         .flatMapLatest { queryString ->
             getImageSearchResult(queryString)
         }.cachedIn(viewModelScope)

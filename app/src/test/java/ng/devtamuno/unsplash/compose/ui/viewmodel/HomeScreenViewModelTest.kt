@@ -87,7 +87,7 @@ class HomeScreenViewModelTest : FeatureSpec({
                 viewModel.state.searchFieldValue.shouldBeEmpty()
             }
 
-            dispatcher.testCoroutineScheduler.advanceTimeBy(1_100)
+            dispatcher.testCoroutineScheduler.advanceUntilIdle()
 
             withClue("View Model state.searchField should not be empty") {
                 viewModel.state.searchFieldValue.shouldNotBeEmpty()
@@ -114,7 +114,7 @@ class HomeScreenViewModelTest : FeatureSpec({
             //when event is dispatched
             viewModel.dispatch(HomeScreenEvent.UpdateSearchField(searchTerm = "cat"))
 
-            dispatcher.testCoroutineScheduler.advanceTimeBy(900)
+            dispatcher.testCoroutineScheduler.advanceUntilIdle()
 
             withClue("state.searchField should be updated to search term") {
                 viewModel.state.searchFieldValue.shouldBe("cat")
@@ -133,7 +133,7 @@ class HomeScreenViewModelTest : FeatureSpec({
             //when event is dispatched
             viewModel.dispatch(HomeScreenEvent.SelectChip(chipValue = "france"))
 
-            dispatcher.testCoroutineScheduler.advanceTimeBy(900)
+            dispatcher.testCoroutineScheduler.advanceUntilIdle()
 
             withClue("state.searchField should be updated to search term") {
                 viewModel.state.searchFieldValue.shouldBe("france")
@@ -152,7 +152,7 @@ class HomeScreenViewModelTest : FeatureSpec({
             //when event is dispatched
             viewModel.dispatch(HomeScreenEvent.SelectImage(image = singlePhoto))
 
-            dispatcher.testCoroutineScheduler.advanceTimeBy(900)
+            dispatcher.testCoroutineScheduler.advanceUntilIdle()
 
             withClue("state.selectedImage should be updated to selected image") {
                 viewModel.state.selectedImage.shouldBe(singlePhoto)
@@ -171,7 +171,7 @@ class HomeScreenViewModelTest : FeatureSpec({
             //when event is dispatched
             viewModel.dispatch(HomeScreenEvent.OnImageClicked(image = singlePhoto))
 
-            dispatcher.testCoroutineScheduler.advanceTimeBy(900)
+            dispatcher.testCoroutineScheduler.advanceUntilIdle()
 
             withClue("state.selectedImage should be updated to selected image") {
                 viewModel.state.selectedImage.shouldBe(singlePhoto)
@@ -198,7 +198,7 @@ class HomeScreenViewModelTest : FeatureSpec({
 
             viewModel.dispatch(HomeScreenEvent.ImagePreviewDialog.Open)
 
-            dispatcher.testCoroutineScheduler.advanceTimeBy(900)
+            dispatcher.testCoroutineScheduler.advanceUntilIdle()
 
             withClue("state.isImagePreviewDialogVisible should be true") {
                 viewModel.state.isImagePreviewDialogVisible.shouldBeTrue()
@@ -216,7 +216,7 @@ class HomeScreenViewModelTest : FeatureSpec({
 
             viewModel.dispatch(HomeScreenEvent.ImagePreviewDialog.Open)
 
-            dispatcher.testCoroutineScheduler.advanceTimeBy(900)
+            dispatcher.testCoroutineScheduler.advanceUntilIdle()
 
             withClue("state.isImagePreviewDialogVisible should be true") {
                 viewModel.state.isImagePreviewDialogVisible.shouldBeTrue()
@@ -224,7 +224,7 @@ class HomeScreenViewModelTest : FeatureSpec({
 
             viewModel.dispatch(HomeScreenEvent.ImagePreviewDialog.Dismiss)
 
-            dispatcher.testCoroutineScheduler.advanceTimeBy(900)
+            dispatcher.testCoroutineScheduler.advanceUntilIdle()
 
             withClue("state.isImagePreviewDialogVisible should be false") {
                 viewModel.state.isImagePreviewDialogVisible.shouldBeFalse()
