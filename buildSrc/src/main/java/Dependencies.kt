@@ -52,6 +52,7 @@ object Dependencies {
         private const val composeNavigation = "androidx.navigation:navigation-compose:2.4.0"
         private const val composehiltNavigation = "androidx.hilt:hilt-navigation-compose:1.1.0-alpha01"
         private const val composeLifecyleExtension = "androidx.lifecycle:lifecycle-runtime-compose:2.6.1"
+        private const val composeBlurHash = "com.github.dalafiarisamuel:composeblurhash:1.0.2"
 
         val implementations = listOf(
             composeUi,
@@ -64,6 +65,7 @@ object Dependencies {
             composeNavigation,
             composehiltNavigation,
             composeLifecyleExtension,
+            composeBlurHash
         )
 
     }
