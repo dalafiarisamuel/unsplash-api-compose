@@ -1,10 +1,5 @@
 package ng.devtamuno.unsplash.compose.ui.dialog
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.MutableTransitionState
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -12,11 +7,10 @@ import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -31,11 +25,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import coil.compose.AsyncImagePainter
-import coil.compose.rememberAsyncImagePainter
-import coil.compose.rememberImagePainter
-import coil.request.ImageRequest
-import coil.request.ImageResult
+import coil.compose.AsyncImage
+import com.devtamuno.composeblurhash.ext.rememberBlurHashPainter
 import ng.devtamuno.unsplash.compose.R
 import ng.devtamuno.unsplash.compose.data.model.ui.Photo
 import ng.devtamuno.unsplash.compose.ui.theme.color
@@ -52,8 +43,11 @@ fun ImagePreviewDialog(photo: Photo?, onDismissCLicked: () -> Unit) {
         )
     ) {
         DialogContent(
-            imageUrl = photo?.urls?.regular,
+            imageUrl = photo?.urls?.full,
             imageColor = photo?.color,
+            blurHash = photo?.blurHash,
+            imageWidth = photo?.width,
+            imageHeight = photo?.height,
             authorOrDescriptionText = photo?.description ?: photo?.alternateDescription
             ?: photo?.user?.name
         )
@@ -67,23 +61,21 @@ fun ImagePreviewDialog(photo: Photo?, onDismissCLicked: () -> Unit) {
 private fun DialogContent(
     imageUrl: String? = null,
     imageColor: String? = null,
-    authorOrDescriptionText: String? = null
+    blurHash: String? = null,
+    imageWidth: Int? = null,
+    imageHeight: Int? = null,
+    authorOrDescriptionText: String? = null,
 ) {
     val imageColorParsed = (imageColor?.color ?: Color(0xFF212121))
     val imageColorParseComplementary = imageColorParsed.complementary()
-    val isShowProgress = MutableTransitionState(true)
-
-    val painter = rememberAsyncImagePainter(imageUrl)
-
-    when (painter.state) {
-        is AsyncImagePainter.State.Loading,
-        is AsyncImagePainter.State.Empty -> { /*default state*/
-        }
-        is AsyncImagePainter.State.Error,
-        is AsyncImagePainter.State.Success -> {
-            isShowProgress.targetState = false
-        }
+    val aspectRatio: Float by remember {
+        derivedStateOf { (imageWidth?.toFloat() ?: 1.0F) / (imageHeight?.toFloat() ?: 1.0F) }
     }
+    val rememberBlurHash = rememberBlurHashPainter(
+        blurString = blurHash ?: "",
+        width = imageWidth ?: 1,
+        height = imageHeight ?: 1,
+    )
 
     Box(
         modifier = Modifier
@@ -98,13 +90,17 @@ private fun DialogContent(
             shape = RoundedCornerShape(10.dp),
             modifier = Modifier.fillMaxSize()
         ) {
-            Image(
-                painter = painter,
-                contentScale = ContentScale.Inside,
-                contentDescription = authorOrDescriptionText,
-                modifier = Modifier.wrapContentSize()
+            AsyncImage(
+                model = imageUrl,
+                contentDescription = null,
+                placeholder = rememberBlurHash,
+                error = rememberBlurHash,
+                contentScale = ContentScale.FillBounds,
+                modifier = Modifier
+                    .aspectRatio(aspectRatio)
+                    .fillMaxWidth()
+                    .defaultMinSize(minHeight = 200.dp)
             )
-
         }
 
         Row(
@@ -148,18 +144,6 @@ private fun DialogContent(
                     .basicMarquee()
             )
 
-        }
-
-        AnimatedVisibility(
-            modifier = Modifier.align(Alignment.Center),
-            visibleState = isShowProgress,
-            enter = fadeIn(initialAlpha = 0.4f),
-            exit = fadeOut(tween(durationMillis = 250))
-
-        ) {
-            CircularProgressIndicator(
-                color = imageColorParseComplementary
-            )
         }
     }
 
