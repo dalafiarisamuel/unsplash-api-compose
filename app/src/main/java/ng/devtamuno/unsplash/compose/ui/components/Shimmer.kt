@@ -33,7 +33,7 @@ fun shimmerBrush(
         Brush.linearGradient(
             colors = shimmerColors,
             start = Offset.Zero,
-            end = Offset(x = translateAnimation.value, y = translateAnimation.value)
+            end = Offset(x = translateAnimation.value, y = 0f)
         )
     } else {
         Brush.linearGradient(
