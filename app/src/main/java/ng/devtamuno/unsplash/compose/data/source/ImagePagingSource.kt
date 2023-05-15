@@ -2,20 +2,22 @@ package ng.devtamuno.unsplash.compose.data.source
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
+import java.io.IOException
 import ng.devtamuno.unsplash.compose.data.mapper.PhotoMapper
 import ng.devtamuno.unsplash.compose.data.model.ui.Photo
 import ng.devtamuno.unsplash.compose.data.repository.ImageRepository
 import retrofit2.HttpException
-import java.io.IOException
-
-
-private const val STARTING_PAGE_INDEX = 1
 
 class ImagePagingSource(
     private val repository: ImageRepository,
     private val photoMapper: PhotoMapper,
-    private val query: String
+    private val query: String,
 ) : PagingSource<Int, Photo>() {
+    companion object {
+        private const val STARTING_PAGE_INDEX = 1
+        const val PAGE_SIZE = 20
+    }
+
     override fun getRefreshKey(state: PagingState<Int, Photo>): Int {
         return STARTING_PAGE_INDEX
     }
