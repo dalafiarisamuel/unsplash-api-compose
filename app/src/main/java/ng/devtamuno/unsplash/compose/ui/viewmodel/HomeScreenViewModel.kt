@@ -76,7 +76,7 @@ class HomeScreenViewModel @Inject constructor(
 
     private fun getImageSearchResult(query: String) = Pager(
         config = PagingConfig(
-            pageSize = 20,
+            pageSize = ImagePagingSource.PAGE_SIZE,
             enablePlaceholders = false
         ),
         pagingSourceFactory = {

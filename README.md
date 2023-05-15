@@ -11,6 +11,7 @@ A project to display images from https://unsplash.com API using Jetpack Compose
 * Dagger Hilt
 * Kotlin Gradle DSL
 * Paging
+* Compose Blurhash
 
 <br>
 
@@ -30,6 +31,8 @@ A project to display images from https://unsplash.com API using Jetpack Compose
 - [Paging](https://developer.android.com/jetpack/androidx/releases/paging) - The Paging Library
   makes it easier for you to load data gradually and gracefully within your app
   <br>
+- [Compose Blurhash](https://github.com/dalafiarisamuel/composeblurhash) - is a library that has
+  blurred effect until the actual image gets downloaded from the web.
 
 ## Prerequisite
 
@@ -37,5 +40,9 @@ A project to display images from https://unsplash.com API using Jetpack Compose
 * Enter your valid API token [here](./app/src/main/java/ng/devtamuno/unsplash/compose/env/Env.kt)
 
 ## App Screenshots
-<img src="./images/screenshot_1.png" alt="Screenshot 1" width="40%" height="40%" hspace="5"/><img src="./images/screenshot_2.png" alt="Screenshot 2" width="40%" height="40%"/><img src="./images/screenshot_3.png" alt="Screenshot 3" width="40%" height="40%"/><br>
+<img src="./images/screenshot_4.png" alt="Screenshot 4" width="20%" height="20%" hspace="5" vspace="5"/>
+<img src="./images/screenshot_1.png" alt="Screenshot 1" width="20%" height="20%" hspace="5" vspace="5"/>
+<img src="./images/screenshot_2.png" alt="Screenshot 2" width="20%" height="20%" hspace="5" vspace="5"/>
+<img src="./images/screenshot_3.png" alt="Screenshot 3" width="20%" height="20%" hspace="5" vspace="5"/>
+<br>
 
