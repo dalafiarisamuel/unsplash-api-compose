@@ -40,9 +40,10 @@ A project to display images from https://unsplash.com API using Jetpack Compose
 * Enter your valid API token [here](./app/src/main/java/ng/devtamuno/unsplash/compose/env/Env.kt)
 
 ## App Screenshots
-<img src="./images/screenshot_4.png" alt="Screenshot 4" width="40%" height="40%" hspace="5"/>
-<img src="./images/screenshot_1.png" alt="Screenshot 1" width="40%" height="40%" hspace="5"/>
-<img src="./images/screenshot_2.png" alt="Screenshot 2" width="40%" height="40%" hspace="5"/>
-<img src="./images/screenshot_3.png" alt="Screenshot 3" width="40%" height="40%" hspace="5"/>
-<br>
+| ![Screenshot 4](./images/screenshot_4.png) | ![Screenshot 1](./images/screenshot_1.png) |
+|--------------------------------------------|--------------------------------------------|
 
+| ![Screenshot 2](./images/screenshot_2.png) | ![Screenshot 3](./images/screenshot_3.png) |
+|--------------------------------------------|--------------------------------------------|
+
+<br>
