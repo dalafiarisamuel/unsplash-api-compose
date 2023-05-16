@@ -63,10 +63,12 @@ android {
 
 tasks.withType<Test>().configureEach {
     useJUnitPlatform()
+    testLogging {
+        events("passed", "skipped", "failed")
+    }
 }
 
 dependencies {
-    implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
     implementAll(Dependencies.implementations)
     implementAll(SupportDependencies.supportImplementation)
     testImplementAll(TestDependencies.testImplementation)

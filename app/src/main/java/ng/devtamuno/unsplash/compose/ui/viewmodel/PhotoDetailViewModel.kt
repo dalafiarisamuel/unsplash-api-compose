@@ -20,7 +20,7 @@ import ng.devtamuno.unsplash.compose.ui.state.PhotoDetailState
 class PhotoDetailViewModel @Inject constructor(
     private val repository: ImageRepository,
     private val fileDownloader: FileDownloader,
-    savedStateHandle: SavedStateHandle
+    savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(PhotoDetailState())
@@ -32,6 +32,8 @@ class PhotoDetailViewModel @Inject constructor(
     }
 
     private fun getSelectedPhotoById(photoId: String) = viewModelScope.launch {
+        _uiState.update { it.copy(intentPhotoId = photoId) }
+
         when (val result = repository.getPhoto(photoId = photoId)) {
             is Resource.Success -> {
                 _uiState.update {
@@ -42,6 +44,7 @@ class PhotoDetailViewModel @Inject constructor(
                     )
                 }
             }
+
             is Resource.Failure -> {
                 _uiState.update {
                     it.copy(

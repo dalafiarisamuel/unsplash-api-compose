@@ -9,9 +9,11 @@ object TestDependencies {
     private const val mockKJvm = "io.mockk:mockk-agent-jvm:${Versions.mockK}"
     private const val okHttpMockServer =
         "com.squareup.okhttp3:mockwebserver:${Versions.okHttpMockServer}"
- private const val kotestFramework = "io.kotest:kotest-runner-junit5:${Versions.kotestVersion}"
- private const val kotestAssertions = "io.kotest:kotest-assertions-core:${Versions.kotestVersion}"
- private const val kotestProperty = "io.kotest:kotest-property:${Versions.kotestVersion}"
+    private const val kotestFramework = "io.kotest:kotest-runner-junit5:${Versions.kotestVersion}"
+    private const val kotestAssertions =
+        "io.kotest:kotest-assertions-core:${Versions.kotestVersion}"
+    private const val kotestProperty = "io.kotest:kotest-property:${Versions.kotestVersion}"
+    private const val combine = "app.cash.turbine:turbine:${Versions.combineVersion}"
 
 
     val testImplementation =
@@ -25,6 +27,7 @@ object TestDependencies {
             kotestProperty,
             mockK,
             mockKJvm,
-            okHttpMockServer
+            okHttpMockServer,
+            combine
         )
 }

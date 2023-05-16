@@ -31,7 +31,7 @@ object Versions {
     const val hamcrest = "1.3"
     const val roboElectric = "4.3.1"
     const val googleTruth = "1.1.2"
-    const val mockK = "1.12.5"
+    const val mockK = "1.13.5"
     const val androidXcore = "2.1.0"
     const val loggingInterceptor = "3.8.0"
     const val okHttpMockServer = "4.7.2"
@@ -40,4 +40,5 @@ object Versions {
     const val composeVersion = "1.4.0-alpha05"
     const val savedState = "2.5.0"
     const val kotestVersion = "5.5.5"
+    const val combineVersion = "0.13.0"
 }
