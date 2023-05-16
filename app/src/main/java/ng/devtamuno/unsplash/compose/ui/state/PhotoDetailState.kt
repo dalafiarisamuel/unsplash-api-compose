@@ -6,5 +6,6 @@ import ng.devtamuno.unsplash.compose.data.model.remote.UnsplashPhotoRemote
 data class PhotoDetailState(
     val isLoading: Boolean = true,
     val photo: UnsplashPhotoRemote? = null,
-    val error: Throwable? = null
+    val error: Throwable? = null,
+    val intentPhotoId: String? = null
 )
