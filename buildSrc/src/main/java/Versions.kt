@@ -41,4 +41,5 @@ object Versions {
     const val savedState = "2.5.0"
     const val kotestVersion = "5.5.5"
     const val combineVersion = "0.13.0"
+    const val kotlinxImmutableCollection = "0.3.5"
 }

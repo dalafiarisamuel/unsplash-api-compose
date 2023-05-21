@@ -34,6 +34,8 @@ object Dependencies {
         "androidx.paging:paging-runtime:${Versions.androidxPagingRuntime}"
     private const val savedState =
         "androidx.lifecycle:lifecycle-viewmodel-savedstate:${Versions.savedState}"
+    private const val kotlinxImmutableCollection =
+        "org.jetbrains.kotlinx:kotlinx-collections-immutable:${Versions.kotlinxImmutableCollection}"
 
 
     object ComposeDependencies {
@@ -50,8 +52,10 @@ object Dependencies {
         private const val composeViewModel = "androidx.lifecycle:lifecycle-viewmodel-compose:2.4.1"
         private const val coilCompose = "io.coil-kt:coil-compose:2.2.2"
         private const val composeNavigation = "androidx.navigation:navigation-compose:2.4.0"
-        private const val composehiltNavigation = "androidx.hilt:hilt-navigation-compose:1.1.0-alpha01"
-        private const val composeLifecyleExtension = "androidx.lifecycle:lifecycle-runtime-compose:2.6.1"
+        private const val composehiltNavigation =
+            "androidx.hilt:hilt-navigation-compose:1.1.0-alpha01"
+        private const val composeLifecyleExtension =
+            "androidx.lifecycle:lifecycle-runtime-compose:2.6.1"
         private const val composeBlurHash = "com.github.dalafiarisamuel:composeblurhash:1.0.2"
 
         val implementations = listOf(
@@ -93,5 +97,6 @@ object Dependencies {
         lifecycleExtension,
         androidxPagingRuntime,
         savedState,
+        kotlinxImmutableCollection,
     ) + ComposeDependencies.implementations
 }
