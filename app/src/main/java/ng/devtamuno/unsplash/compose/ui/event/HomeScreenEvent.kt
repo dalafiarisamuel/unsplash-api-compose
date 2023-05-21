@@ -11,7 +11,6 @@ sealed class HomeScreenEvent {
     data class OnImageClicked(val image: Photo?) : HomeScreenEvent()
 
     data class UpdateSearchField(val searchTerm: String) : HomeScreenEvent()
-    data class UpdateCollapsibleToolBarVisibility(val isContentVisible: Boolean) : HomeScreenEvent()
 
     sealed class ImagePreviewDialog : HomeScreenEvent() {
 

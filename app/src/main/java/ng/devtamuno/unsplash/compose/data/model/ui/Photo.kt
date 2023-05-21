@@ -1,9 +1,8 @@
 package ng.devtamuno.unsplash.compose.data.model.ui
 
-import android.os.Parcelable
-import kotlinx.parcelize.Parcelize
+import androidx.compose.runtime.Stable
 
-@Parcelize
+@Stable
 data class Photo(
     val id: String,
     val blurHash: String?,
@@ -13,25 +12,24 @@ data class Photo(
     val alternateDescription: String?,
     val description: String?,
     val urls: PhotoUrls,
-    val user: PhotoCreator
-) : Parcelable
+    val user: PhotoCreator,
+)
 
-@Parcelize
+@Stable
 data class PhotoUrls(
     val raw: String,
     val full: String,
     val regular: String,
     val small: String,
-    val thumb: String
-) : Parcelable
+    val thumb: String,
+)
 
-
-@Parcelize
+@Stable
 data class PhotoCreator(
     val name: String,
     val username: String,
-    val attributionUrl: String
-) : Parcelable
+    val attributionUrl: String,
+)
 
 
 val dummyPhoto = Photo(
@@ -50,8 +48,6 @@ val dummyPhoto = Photo(
         thumb = "https://images.unsplash.com/photo-1606707764561-ed73aab9fdd5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwyNDI1MTl8MHwxfHNlYXJjaHw1MXx8Q29tZXR8ZW58MHx8fHwxNjc2NTY0NzQ3&ixlib=rb-4.0.3&q=80&w=200"
     ),
     user = PhotoCreator(
-        name = "Rich Wooten",
-        username = "whatsawoot",
-        attributionUrl = ""
+        name = "Rich Wooten", username = "whatsawoot", attributionUrl = ""
     )
 )
