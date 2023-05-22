@@ -41,6 +41,8 @@ object Dependencies {
     object ComposeDependencies {
 
         private const val composeUi = "androidx.compose.ui:ui:${Versions.composeVersion}"
+        private const val composeUiUtil = "androidx.compose.ui:ui-util:${Versions.composeVersion}"
+        private const val composeRuntime = "androidx.compose.runtime:runtime:${Versions.composeVersion}"
         private const val composeMaterial =
             "androidx.compose.material:material:1.3.1"
         private const val composeRuntimeLiveData =
@@ -69,7 +71,9 @@ object Dependencies {
             composeNavigation,
             composehiltNavigation,
             composeLifecyleExtension,
-            composeBlurHash
+            composeBlurHash,
+            composeUiUtil,
+            composeRuntime
         )
 
     }

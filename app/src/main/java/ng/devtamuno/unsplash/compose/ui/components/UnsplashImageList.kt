@@ -94,7 +94,7 @@ private fun PhotosList(
 ) {
     LazyVerticalStaggeredGrid(
         state = lazyGridState,
-        verticalArrangement = Arrangement.spacedBy(8.dp),
+        verticalItemSpacing = 8.dp,
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         modifier = Modifier
             .padding(top = 15.dp)

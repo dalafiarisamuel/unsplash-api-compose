@@ -18,6 +18,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 import ng.devtamuno.unsplash.compose.R
 import ng.devtamuno.unsplash.compose.data.model.ui.ChipData
 import ng.devtamuno.unsplash.compose.ui.theme.appDark
@@ -69,7 +71,7 @@ fun Chip(
 @Composable
 fun ChipGroup(
     modifier: Modifier = Modifier,
-    itemList: List<ChipData> = listOf(
+    itemList: ImmutableList<ChipData> = persistentListOf(
         ChipData(
             stringResource(id = R.string.current_events_emoji),
             stringResource(id = R.string.current_events)
@@ -90,10 +92,8 @@ fun ChipGroup(
             items(itemList) { chip ->
                 Chip(
                     chip = chip,
-                    isSelected = selectedText?.equals(chip.chipText, ignoreCase = true) ?: false,
-                    onSelectionChanged = {
-                        onSelectedChanged(it)
-                    }
+                    isSelected = chip.isChipSelected(selectedText),
+                    onSelectionChanged = onSelectedChanged
                 )
             }
         }
@@ -105,13 +105,13 @@ fun ChipGroup(
 fun ChipComponent(
     modifier: Modifier = Modifier,
     selectedText: String? = null,
-    textValueChange: ((String) -> Unit)? = null
+    textValueChange: ((String) -> Unit)? = null,
 ) {
 
     ChipGroup(
         modifier = modifier,
         selectedText = selectedText,
-        itemList = listOf(
+        itemList = persistentListOf(
             ChipData(
                 stringResource(id = R.string.current_events_emoji),
                 stringResource(id = R.string.current_events)

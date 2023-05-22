@@ -37,7 +37,7 @@ object Versions {
     const val okHttpMockServer = "4.7.2"
     const val okHttp = "4.2.2"
     const val retroMock = "1.1.0"
-    const val composeVersion = "1.4.0-alpha05"
+    const val composeVersion = "1.4.3"
     const val savedState = "2.5.0"
     const val kotestVersion = "5.5.5"
     const val combineVersion = "0.13.0"
